@@ -1,6 +1,18 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import PropTypes from 'prop-types';
+import RecipesContext from '../context/RecipesContext';
 
-function Login() {
+function Login({ history }) {
+  const { userEmail, setUserEmail } = useContext(RecipesContext);
+
+  const handleClick = () => {
+    const email = { email: userEmail };
+    localStorage.setItem('user', JSON.stringify(email));
+    localStorage.setItem('mealsToken', '1');
+    localStorage.setItem('cocktailsToken', '1');
+    history.push('/recipes');
+  };
+
   return (
     <div>
       <label htmlFor="email">
@@ -11,6 +23,8 @@ function Login() {
           name="email"
           data-testid="email-input"
           placeholder="Digite seu E-mail"
+          value={ userEmail }
+          onChange={ (e) => setUserEmail(e.target.value) }
         />
       </label>
       <label htmlFor="password">
@@ -22,9 +36,21 @@ function Login() {
           data-testid="password-input"
         />
       </label>
-      <button data-testid="login-submit-btn" type="submit">Login</button>
+      <button
+        data-testid="login-submit-btn"
+        type="submit"
+        onClick={ handleClick }
+      >
+        Login
+      </button>
     </div>
   );
 }
+
+Login.propTypes = {
+  history: PropTypes.shape(
+    PropTypes.string.isRequired,
+  ).isRequired,
+};
 
 export default Login;
