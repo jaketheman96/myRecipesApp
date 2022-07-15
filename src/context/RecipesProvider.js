@@ -8,19 +8,23 @@ function RecipesProvider({ children }) {
   const [disabled, setDisabled] = useState(true);
   const [mealsApi, setMealsApi] = useState([]);
   const [drinksApi, setDrinksApi] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchApiMeals = async () => {
+      setLoading(true);
       const url = 'https://www.themealdb.com/api/json/v1/1/search.php?s=';
       const fetching = await fetch(url);
       const response = await fetching.json();
-      setMealsApi(response);
+      setMealsApi(response.meals);
+      setLoading(false);
     };
+
     const fetchApiDrinks = async () => {
       const url = 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=';
       const fetching = await fetch(url);
       const response = await fetching.json();
-      setDrinksApi(response);
+      setDrinksApi(response.drinks);
     };
     fetchApiMeals();
     fetchApiDrinks();
@@ -35,6 +39,8 @@ function RecipesProvider({ children }) {
     setDisabled,
     mealsApi,
     drinksApi,
+    loading,
+    setLoading,
   };
 
   return (
