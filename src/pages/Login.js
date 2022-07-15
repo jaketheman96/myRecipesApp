@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import '../style/Login.css';
 import RecipesContext from '../context/RecipesContext';
 
 function Login({ history }) {
@@ -23,7 +24,7 @@ function Login({ history }) {
       }
     };
     validation();
-  }, [userEmail, password]);
+  });
 
   const handleClick = () => {
     const email = { email: userEmail };
@@ -34,37 +35,39 @@ function Login({ history }) {
   };
 
   return (
-    <div>
-      <label htmlFor="email">
-        {' '}
-        E-mail:
-        <input
-          type="email"
-          name="email"
-          data-testid="email-input"
-          placeholder="Digite seu E-mail"
-          value={ userEmail }
-          onChange={ (e) => setUserEmail(e.target.value) }
-        />
-      </label>
-      <label htmlFor="password">
-        {' '}
-        Password:
-        <input
-          type="password"
-          name="password"
-          data-testid="password-input"
-          onChange={ (e) => setPassword(e.target.value) }
-        />
-      </label>
-      <button
-        data-testid="login-submit-btn"
-        type="submit"
-        onClick={ handleClick }
-        disabled={ disabled }
-      >
-        Login
-      </button>
+    <div className="login-inputs">
+      <form onSubmit={ handleClick }>
+        <label htmlFor="email">
+          {' '}
+          E-mail:
+          <input
+            type="email"
+            name="email"
+            data-testid="email-input"
+            placeholder="Digite seu E-mail"
+            value={ userEmail }
+            onChange={ (e) => setUserEmail(e.target.value) }
+          />
+        </label>
+        <label htmlFor="password">
+          {' '}
+          Password:
+          <input
+            type="password"
+            name="password"
+            data-testid="password-input"
+            onChange={ (e) => setPassword(e.target.value) }
+          />
+        </label>
+        <button
+          data-testid="login-submit-btn"
+          type="submit"
+          disabled={ disabled }
+          className="submit-btn"
+        >
+          Login
+        </button>
+      </form>
     </div>
   );
 }
