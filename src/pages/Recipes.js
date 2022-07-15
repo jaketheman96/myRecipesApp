@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import Footer from '../components/Footer';
 import RecipesContext from '../context/RecipesContext';
 
 function Recipes() {
@@ -22,6 +23,7 @@ function Recipes() {
           )) }
         </section>
       ) }
+      <Footer />
     </header>
   );
 }
