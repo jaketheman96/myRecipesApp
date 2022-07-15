@@ -8,6 +8,7 @@ function RecipesProvider({ children }) {
   const [disabled, setDisabled] = useState(true);
   const [mealsApi, setMealsApi] = useState([]);
   const [drinksApi, setDrinksApi] = useState([]);
+  const [isIngredient, setIsIngredient] = useState(false);
 
   useEffect(() => {
     const fetchApiMeals = async () => {
@@ -35,6 +36,8 @@ function RecipesProvider({ children }) {
     setDisabled,
     mealsApi,
     drinksApi,
+    isIngredient,
+    setIsIngredient,
   };
 
   return (

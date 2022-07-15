@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import '../style/Login.css';
 import RecipesContext from '../context/RecipesContext';
+import SearchBar from '../components/SearchBar';
 
 function Login({ history }) {
   const {
@@ -68,6 +69,7 @@ function Login({ history }) {
           Login
         </button>
       </form>
+      <SearchBar />
     </div>
   );
 }
