@@ -8,20 +8,26 @@ function RecipesProvider({ children }) {
   const [disabled, setDisabled] = useState(true);
   const [mealsApi, setMealsApi] = useState([]);
   const [drinksApi, setDrinksApi] = useState([]);
-  const [isIngredient, setIsIngredient] = useState(false);
+  const [searchType, setSearchType] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [showSearchBox, setShowSearchBox] = useState(false);
+  const [searchedData, setSearchedData] = useState([]);
 
   useEffect(() => {
     const fetchApiMeals = async () => {
+      setLoading(true);
       const url = 'https://www.themealdb.com/api/json/v1/1/search.php?s=';
       const fetching = await fetch(url);
       const response = await fetching.json();
-      setMealsApi(response);
+      setMealsApi(response.meals);
+      setLoading(false);
     };
+
     const fetchApiDrinks = async () => {
       const url = 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=';
       const fetching = await fetch(url);
       const response = await fetching.json();
-      setDrinksApi(response);
+      setDrinksApi(response.drinks);
     };
     fetchApiMeals();
     fetchApiDrinks();
@@ -36,8 +42,14 @@ function RecipesProvider({ children }) {
     setDisabled,
     mealsApi,
     drinksApi,
-    isIngredient,
-    setIsIngredient,
+    loading,
+    setLoading,
+    searchType,
+    setSearchType,
+    searchedData,
+    setSearchedData,
+    showSearchBox,
+    setShowSearchBox,
   };
 
   return (
