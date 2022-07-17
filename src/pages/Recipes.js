@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import SearchTopBtn from '../components/SearchTopBtn';
 import Footer from '../components/Footer';
 import RecipesContext from '../context/RecipesContext';
 
@@ -7,6 +8,7 @@ function Recipes() {
   const { mealsApi, loading } = useContext(RecipesContext);
   return (
     <header>
+      <SearchTopBtn />
       { loading ? <p>Loading</p> : (
         <section>
           { mealsApi.slice(0, nrDeReceitas).map((food, index) => (

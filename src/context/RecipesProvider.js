@@ -8,7 +8,10 @@ function RecipesProvider({ children }) {
   const [disabled, setDisabled] = useState(true);
   const [mealsApi, setMealsApi] = useState([]);
   const [drinksApi, setDrinksApi] = useState([]);
+  const [searchType, setSearchType] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showSearchBox, setShowSearchBox] = useState(false);
+  const [searchedData, setSearchedData] = useState([]);
 
   useEffect(() => {
     const fetchApiMeals = async () => {
@@ -41,6 +44,12 @@ function RecipesProvider({ children }) {
     drinksApi,
     loading,
     setLoading,
+    searchType,
+    setSearchType,
+    searchedData,
+    setSearchedData,
+    showSearchBox,
+    setShowSearchBox,
   };
 
   return (
