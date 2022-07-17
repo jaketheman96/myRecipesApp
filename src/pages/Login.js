@@ -1,8 +1,9 @@
 import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import '../style/Login.css';
+import styles from '../styles/Login.module.css';
 import RecipesContext from '../context/RecipesContext';
-import SearchBar from '../components/SearchBar';
+import Logo from '../images/logo.png';
+// import SearchBar from '../components/SearchBar';
 
 function Login({ history }) {
   const {
@@ -36,41 +37,41 @@ function Login({ history }) {
   };
 
   return (
-    <div className="login-inputs">
-      <form onSubmit={ handleClick }>
-        <label htmlFor="email">
-          {' '}
-          E-mail:
-          <input
-            type="email"
-            name="email"
-            data-testid="email-input"
-            placeholder="Digite seu E-mail"
-            value={ userEmail }
-            onChange={ (e) => setUserEmail(e.target.value) }
-          />
-        </label>
-        <label htmlFor="password">
-          {' '}
-          Password:
-          <input
-            type="password"
-            name="password"
-            data-testid="password-input"
-            onChange={ (e) => setPassword(e.target.value) }
-          />
+    <main className={ styles.main }>
+      <form onSubmit={ handleClick } className={ styles.form }>
+        <img src={ Logo } alt="logo" className={ styles.img } />
+        <input
+          type="email"
+          name="email"
+          data-testid="email-input"
+          placeholder="E-mail"
+          value={ userEmail }
+          onChange={ (e) => setUserEmail(e.target.value) }
+          className={ styles.input }
+        />
+        <input
+          type="password"
+          name="password"
+          data-testid="password-input"
+          onChange={ (e) => setPassword(e.target.value) }
+          placeholder="Password"
+          className={ styles.input }
+        />
+        <label htmlFor="checkbox" className={ styles.checkboxLabel }>
+          <input name="checkbox" type="checkbox" className={ styles.checkbox } />
+          <p className={ styles.checkboxText }>remember me</p>
         </label>
         <button
           data-testid="login-submit-btn"
           type="submit"
           disabled={ disabled }
-          className="submit-btn"
+          className={ styles.button }
         >
           Login
         </button>
       </form>
-      <SearchBar />
-    </div>
+      {/* <SearchBar /> */}
+    </main>
   );
 }
 Login.propTypes = {

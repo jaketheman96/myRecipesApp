@@ -1,0 +1,85 @@
+/* #Mobile-First  */
+.main {
+  align-items: center;
+  background-color: #fcaf20;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.form {
+  align-items: center;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  height: 60vh;
+  justify-content: center;
+  width: 80%;
+}
+
+.img {
+  margin-bottom: 20px;
+  width: 100px;
+}
+
+.input {
+  background-color: #fcaf20;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-weight: 600;
+  margin: 5px;
+  outline-color: rgb(214, 129, 2);
+  padding: 6px 12px;
+  width: 80%;
+}
+
+.input::placeholder {
+  color: rgb(236, 131, 61);
+}
+
+.button {
+  background-color: #fcaf20;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  margin: 10px;
+  padding: 10px;
+  width: 80%;
+}
+
+.checkboxLabel {
+  align-items: center;
+  align-self: center;
+  display: flex;
+  justify-content: flex-start;
+  width: 80%;
+}
+
+.checkboxText {
+  color: #fcaf20;
+  font-weight: 600;
+  margin: 1px;
+  margin-left: 5px;
+}
+
+.checkbox {
+  accent-color: #fcaf20;
+  cursor: pointer;
+  height: 15px;
+  width: 15px;
+}
+
+/* Responsividade para desktop */
+
+@media screen and ( min-width : 1000px ) {
+
+  .form {
+    width: 30%;
+  }
+}
