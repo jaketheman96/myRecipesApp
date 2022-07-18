@@ -1,12 +1,8 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import RecipesContext from '../../context/RecipesContext';
 
 function PageTitle() {
-  const { pathNames, handleLetters } = useContext(RecipesContext);
-
-  useEffect(() => {
-    handleLetters();
-  }, []);
+  const { pathNames } = useContext(RecipesContext);
 
   return (
     <div data-testid="page-title">{pathNames}</div>

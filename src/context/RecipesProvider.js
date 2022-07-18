@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useLocation } from 'react-router-dom';
 import RecipesContext from './RecipesContext';
@@ -14,17 +14,20 @@ function RecipesProvider({ children }) {
   const [pathNames, setPathNames] = useState('');
   const { pathname } = useLocation();
 
-  const handleLetters = () => {
-    const removeFirstLetter = pathname.slice(1);
-    const removingTrace = removeFirstLetter.replaceAll('-', ' ');
-    const arrPathNames = removingTrace.split(' ');
-    for (let i = 0; i < arrPathNames.length; i += 1) {
-      arrPathNames[i] = arrPathNames[i]
-        .charAt(0)
-        .toUpperCase() + arrPathNames[i].slice(1);
-    }
-    setPathNames(arrPathNames.join(' '));
-  };
+  useEffect(() => {
+    const handleLetters = () => {
+      const removeFirstLetter = pathname.slice(1);
+      const removingTrace = removeFirstLetter.replaceAll('-', ' ');
+      const arrPathNames = removingTrace.split(' ');
+      for (let i = 0; i < arrPathNames.length; i += 1) {
+        arrPathNames[i] = arrPathNames[i]
+          .charAt(0)
+          .toUpperCase() + arrPathNames[i].slice(1);
+      }
+      setPathNames(arrPathNames.join(' '));
+    };
+    handleLetters();
+  });
 
   const STATE = {
     userEmail,
@@ -43,7 +46,6 @@ function RecipesProvider({ children }) {
     setShowSearchBox,
     pathNames,
     setPathNames,
-    handleLetters,
   };
 
   return (
