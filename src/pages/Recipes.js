@@ -1,19 +1,51 @@
-import React from 'react';
-import SearchTopBtn from '../components/SearchTopBtn';
+import React, { useContext } from 'react';
 import Footer from '../components/Footer';
-import FoodCard from '../components/FoodCard';
-import DrinkCard from '../components/DrinkCard';
+import RecipesContext from '../context/RecipesContext';
+import Header from '../components/header/Header';
+import RecipeDetailsFoods from './RecipeDetailsFoods';
 
 function Recipes() {
-  /* const history = useHistory(); */
+  /* const nrDeReceitas = 12; */
+  // const { mealsApi, loading } = useContext(RecipesContext);
+  const { searchedData } = useContext(RecipesContext);
+  console.log(searchedData);
   return (
-    <header>
-      <SearchTopBtn />
-      {/* { history.location.pathname === '/foods' ? <FoodCard /> : <DrinkCard /> } */}
-      <DrinkCard />
-      <FoodCard />
+    <>
+      <Header />
+      { searchedData.length === 1 ? <RecipeDetailsFoods /> : <h1>teste</h1>/* (
+        <section>
+          { searchedData.slice(0, nrDeReceitas).map((food, index) => (
+            <div key={ food.idMeal } data-testid={ `${index}-recipe-card` }>
+              <h1 data-testid={ `${index}-card-name` }>{ food.strMeal }</h1>
+              <img
+                src={ food.strMealThumb }
+                alt={ food.strMeal }
+                data-testid={ `${index}-card-img` }
+                width="20"
+                height="20"
+              />
+            </div>
+          )) }
+        </section>
+      ) */}
+      {/* { loading ? <p>Loading</p> : (
+        <section>
+          { mealsApi.slice(0, nrDeReceitas).map((food, index) => (
+            <div key={ food.idMeal } data-testid={ `${index}-recipe-card` }>
+              <h1 data-testid={ `${index}-card-name` }>{ food.strMeal }</h1>
+              <img
+                src={ food.strMealThumb }
+                alt={ food.strMeal }
+                data-testid={ `${index}-card-img` }
+                width="20"
+                height="20"
+              />
+            </div>
+          )) }
+        </section>
+      ) } */}
       <Footer />
-    </header>
+    </>
   );
 }
 

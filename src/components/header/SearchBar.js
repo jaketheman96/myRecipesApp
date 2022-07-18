@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import RecipesContext from '../context/RecipesContext';
+import RecipesContext from '../../context/RecipesContext';
 
 function SearchBar() {
   const {
@@ -43,7 +43,7 @@ function SearchBar() {
   };
 
   return (
-    <div>
+    <>
       <label htmlFor="search-bar">
         <input
           type="text"
@@ -80,12 +80,12 @@ function SearchBar() {
       First Letter
       <button
         type="button"
-        onClick={ () => fetchApi() }
+        onClick={ fetchApi }
         data-testid="exec-search-btn"
       >
         Search
       </button>
-    </div>
+    </>
   );
 }
 
