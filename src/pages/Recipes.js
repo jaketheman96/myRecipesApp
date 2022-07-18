@@ -1,11 +1,12 @@
 import React from 'react';
 import Footer from '../components/Footer';
-// import RecipesContext from '../context/RecipesContext';
+/* import RecipesContext from '../context/RecipesContext'; */
 import Header from '../components/header/Header';
 
 function Recipes() {
-  // const nrDeReceitas = 12;
+  /* const nrDeReceitas = 12; */
   // const { mealsApi, loading } = useContext(RecipesContext);
+  /* const { searchedData } = useContext(RecipesContext); */
   return (
     <>
       <Header />

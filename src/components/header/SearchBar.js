@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import RecipesContext from '../../context/RecipesContext';
 
 function SearchBar() {
@@ -7,10 +8,13 @@ function SearchBar() {
     setSearchType,
     setSearchedData,
     setLoading,
+    loading,
     pathNames,
+    searchedData,
   } = useContext(RecipesContext);
 
   const [searchValue, setSearchValue] = useState('');
+  const history = useHistory();
 
   const handleFoodFetch = () => {
     switch (searchType) {
@@ -63,6 +67,20 @@ function SearchBar() {
     const response = await fetching.json();
     setSearchedData(response);
     setLoading(false);
+    console.log(response.meals.length);
+    if (!loading) {
+      if (response.meals.length === 1 && pathNames === 'Foods') {
+        response.meals.map((element) => {
+          history.push(`/food/${element.idMeal}`);
+        });
+      }
+      if (response.drinks.length === 1 && pathNames === 'Drinks') {
+        response.drinks.map((element) => {
+          history.push(`/drink/${element.idDrink}`);
+        });
+        return element;
+      }
+    }
   };
 
   const handleChange = ({ target }) => {
