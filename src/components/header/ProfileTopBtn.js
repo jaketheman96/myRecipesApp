@@ -1,11 +1,19 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import profileIcon from '../../images/profileIcon.svg';
 
 function ProfileTopBtn() {
+  const history = useHistory();
+
   return (
-    <button type="button" data-testid="profile-top-btn" src={ profileIcon }>
-      <img src={ profileIcon } alt="Profile Icon" />
-    </button>
+    <input
+      type="image"
+      data-testid="profile-top-btn"
+      src={ profileIcon }
+      alt="Profile Icon"
+      onClick={ () => history.push('/profile') }
+    />
+
   );
 }
 

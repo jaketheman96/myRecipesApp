@@ -8,15 +8,14 @@ function SearchTopBtn() {
 
   return (
     <>
-      <button
-        type="button"
+      <input
+        type="image"
         name="hide-unhide-btn"
         data-testid="search-top-btn"
         onClick={ () => setShowSearchBox(!showSearchBox) }
         src={ searchIcon }
-      >
-        <img src={ searchIcon } alt="Search Icon" />
-      </button>
+        alt="Search Icon"
+      />
       <div>
         { showSearchBox && <SearchBar />}
       </div>
