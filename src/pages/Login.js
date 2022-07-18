@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import styles from '../styles/Login.module.css';
 import RecipesContext from '../context/RecipesContext';
 import Logo from '../images/logo.png';
-// import SearchBar from '../components/SearchBar';
 
 function Login({ history }) {
   const {
@@ -57,10 +56,10 @@ function Login({ history }) {
           placeholder="Password"
           className={ styles.input }
         />
-        <label htmlFor="checkbox" className={ styles.checkboxLabel }>
+        {/* <label htmlFor="checkbox" className={ styles.checkboxLabel }>
           <input name="checkbox" type="checkbox" className={ styles.checkbox } />
           <p className={ styles.checkboxText }>remember me</p>
-        </label>
+        </label> */}
         <button
           data-testid="login-submit-btn"
           type="submit"
@@ -70,7 +69,6 @@ function Login({ history }) {
           Login
         </button>
       </form>
-      {/* <SearchBar /> */}
     </main>
   );
 }
