@@ -3,8 +3,6 @@ import RecipesContext from '../context/RecipesContext';
 
 function RecipeDetailsFoods() {
   const { searchedData } = useContext(RecipesContext);
-  
-
   /*  cont test = {} */
   console.log(searchedData);
   return (
