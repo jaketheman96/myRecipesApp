@@ -1,22 +1,28 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import RecipesContext from '../context/RecipesContext';
 
 function RecipeDetailsDrinks() {
-  const { searchedData } = useContext(RecipesContext);
+  const { searchedData, loading } = useContext(RecipesContext);
+  const { drinks } = searchedData;
+
   return (
-    <div>
-      <section>
-        <div>
-          <img
-            src={ searchedData.strMealThumb }
-            alt={ searchedData.strMeal }
-            data-testid="recipe-photo"
-            width="50"
-            height="50"
-          />
-          <h1 data-testid="recipe-title">{ searchedData.strMeal }</h1>
-        </div>
-      </section>
-    </div>
+    <section>
+      Recipe details Drinks
+      {!loading
+        ? drinks.map((element) => (
+          <div key={ element.idDrink }>
+            <img
+              src={ element.strDrinkThumb }
+              alt={ element.strDrink }
+              data-testid="recipe-photo"
+              width="50"
+              height="50"
+            />
+            <h1 data-testid="recipe-title">{ element.strDrink }</h1>
+          </div>
+        ))
+        : <p>Loading...</p>}
+    </section>
   );
 }
 

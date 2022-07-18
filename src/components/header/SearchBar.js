@@ -8,13 +8,12 @@ function SearchBar() {
     setSearchType,
     setSearchedData,
     setLoading,
-    loading,
     pathNames,
-    searchedData,
   } = useContext(RecipesContext);
 
-  const [searchValue, setSearchValue] = useState('');
   const history = useHistory();
+
+  const [searchValue, setSearchValue] = useState('');
 
   const handleFoodFetch = () => {
     switch (searchType) {
@@ -67,19 +66,18 @@ function SearchBar() {
     const response = await fetching.json();
     setSearchedData(response);
     setLoading(false);
-    console.log(response.meals.length);
-    if (!loading) {
-      if (response.meals.length === 1 && pathNames === 'Foods') {
-        response.meals.map((element) => {
-          history.push(`/food/${element.idMeal}`);
-        });
-      }
-      if (response.drinks.length === 1 && pathNames === 'Drinks') {
-        response.drinks.map((element) => {
-          history.push(`/drink/${element.idDrink}`);
-        });
-        return element;
-      }
+    const { meals, drinks } = response;
+    if (pathNames === 'Foods' && meals.length === 1) {
+      meals.map(({ idMeal }) => {
+        history.push(`/foods/${idMeal}`);
+        return idMeal;
+      });
+    }
+    if (pathNames === 'Drinks' && drinks.length === 1) {
+      drinks.map(({ idDrink }) => {
+        history.push(`/drinks/${idDrink}`);
+        return idDrink;
+      });
     }
   };
 
