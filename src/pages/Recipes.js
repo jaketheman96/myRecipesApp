@@ -1,15 +1,15 @@
-import React, { useContext } from 'react';
-import SearchTopBtn from '../components/SearchTopBtn';
+import React from 'react';
 import Footer from '../components/Footer';
-import RecipesContext from '../context/RecipesContext';
+// import RecipesContext from '../context/RecipesContext';
+import Header from '../components/header/Header';
 
 function Recipes() {
-  const nrDeReceitas = 12;
-  const { mealsApi, loading } = useContext(RecipesContext);
+  // const nrDeReceitas = 12;
+  // const { mealsApi, loading } = useContext(RecipesContext);
   return (
-    <header>
-      <SearchTopBtn />
-      { loading ? <p>Loading</p> : (
+    <>
+      <Header />
+      {/* { loading ? <p>Loading</p> : (
         <section>
           { mealsApi.slice(0, nrDeReceitas).map((food, index) => (
             <div key={ food.idMeal } data-testid={ `${index}-recipe-card` }>
@@ -24,9 +24,9 @@ function Recipes() {
             </div>
           )) }
         </section>
-      ) }
+      ) } */}
       <Footer />
-    </header>
+    </>
   );
 }
 
