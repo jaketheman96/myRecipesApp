@@ -7,11 +7,12 @@ function SearchBar() {
     setSearchType,
     setSearchedData,
     setLoading,
+    pathNames,
   } = useContext(RecipesContext);
 
   const [searchValue, setSearchValue] = useState('');
 
-  const handleConditionalUrl = () => {
+  const handleFoodFetch = () => {
     switch (searchType) {
     case 'ingredient':
       return `https://www.themealdb.com/api/json/v1/1/filter.php?i=${searchValue}`;
@@ -29,9 +30,36 @@ function SearchBar() {
     }
   };
 
+  const handleDrinkFetch = () => {
+    switch (searchType) {
+    case 'ingredient':
+      return `https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${searchValue}`;
+    case 'name':
+      return `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${searchValue}`;
+    case 'first-letter':
+      if (searchValue.length > 1) {
+        global.alert('Your search must have only 1 (one) character');
+      } else {
+        return `https://www.thecocktaildb.com/api/json/v1/1/search.php?f=${searchValue}`;
+      }
+      break;
+    default:
+      return searchType;
+    }
+  };
+
+  const handleToggleFetch = (param) => {
+    if (param === 'Foods') {
+      return handleFoodFetch();
+    }
+    if (param === 'Drinks') {
+      return handleDrinkFetch();
+    }
+  };
+
   const fetchApi = async () => {
     setLoading(true);
-    const fetching = await fetch(handleConditionalUrl());
+    const fetching = await fetch(handleToggleFetch(pathNames));
     const response = await fetching.json();
     setSearchedData(response);
     setLoading(false);
