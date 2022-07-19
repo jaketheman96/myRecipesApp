@@ -3,14 +3,13 @@ import RecipesContext from '../context/RecipesContext';
 
 function RecipeDetailsDrinks() {
   const { searchedData, loading } = useContext(RecipesContext);
-  const { drinks } = searchedData;
 
   return (
     <section>
       Recipe details Drinks
       {!loading
-        ? drinks.map((element) => (
-          <div key={ element.idDrink }>
+        ? searchedData.drinks.map((element, index) => (
+          <div key={ index }>
             <img
               src={ element.strDrinkThumb }
               alt={ element.strDrink }

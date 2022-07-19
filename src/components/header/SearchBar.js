@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import RecipesContext from '../../context/RecipesContext';
 
@@ -9,11 +9,11 @@ function SearchBar() {
     setSearchedData,
     setLoading,
     pathNames,
+    searchedData,
   } = useContext(RecipesContext);
 
-  const history = useHistory();
-
   const [searchValue, setSearchValue] = useState('');
+  const history = useHistory();
 
   const handleFoodFetch = () => {
     switch (searchType) {
@@ -60,25 +60,49 @@ function SearchBar() {
     }
   };
 
+  useEffect(() => {
+    if (!searchedData) {
+      return null;
+    }
+    const handleIsDrinkOrFood = () => {
+      switch (pathNames) {
+      case 'Foods':
+        if (!searchedData.meals) {
+          global.alert('Sorry, we haven\'t found any recipes for these filters.');
+          return 'error';
+        }
+        if (searchedData.meals.length === 1) {
+          searchedData.meals.map(({ idMeal }) => {
+            history.push(`/foods/${idMeal}`);
+            return idMeal;
+          });
+        }
+        break;
+      case 'Drinks':
+        if (!searchedData.drinks) {
+          global.alert('Sorry, we haven\'t found any recipes for these filters.');
+          return 'error';
+        }
+        if (searchedData.drinks.length === 1) {
+          searchedData.drinks.map(({ idDrink }) => {
+            history.push(`/drinks/${idDrink}`);
+            return idDrink;
+          });
+        }
+        break;
+      default:
+      }
+    };
+    handleIsDrinkOrFood();
+  }, [searchedData]);
+
   const fetchApi = async () => {
     setLoading(true);
-    const fetching = await fetch(handleToggleFetch(pathNames));
-    const response = await fetching.json();
-    setSearchedData(response);
+    await fetch(handleToggleFetch(pathNames))
+      .then((response) => response.json())
+      .then((element) => setSearchedData(element))
+      .catch((error) => console.log(error));
     setLoading(false);
-    const { meals, drinks } = response;
-    if (pathNames === 'Foods' && meals.length === 1) {
-      meals.map(({ idMeal }) => {
-        history.push(`/foods/${idMeal}`);
-        return idMeal;
-      });
-    }
-    if (pathNames === 'Drinks' && drinks.length === 1) {
-      drinks.map(({ idDrink }) => {
-        history.push(`/drinks/${idDrink}`);
-        return idDrink;
-      });
-    }
   };
 
   const handleChange = ({ target }) => {
