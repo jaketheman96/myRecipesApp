@@ -10,23 +10,32 @@ function RecipesProvider({ children }) {
   const [searchType, setSearchType] = useState('');
   const [loading, setLoading] = useState(false);
   const [showSearchBox, setShowSearchBox] = useState(false);
-  const [searchedData, setSearchedData] = useState([]);
+  const [searchedData, setSearchedData] = useState(null);
   const [pathNames, setPathNames] = useState('');
   const { pathname } = useLocation();
 
   useEffect(() => {
-    const handleLetters = () => {
-      const removeFirstLetter = pathname.slice(1);
-      const removingTrace = removeFirstLetter.replaceAll('-', ' ');
-      const arrPathNames = removingTrace.split(' ');
-      for (let i = 0; i < arrPathNames.length; i += 1) {
-        arrPathNames[i] = arrPathNames[i]
-          .charAt(0)
-          .toUpperCase() + arrPathNames[i].slice(1);
+    const handlePathNames = () => {
+      switch (pathname) {
+      case '/foods':
+        setPathNames('Foods');
+        break;
+      case '/drinks':
+        setPathNames('Drinks');
+        break;
+      case '/profile':
+        setPathNames('Profile');
+        break;
+      case '/done-recipes':
+        setPathNames('Done Recipes');
+        break;
+      case '/favorite-recipes':
+        setPathNames('Favorite Recipes');
+        break;
+      default:
       }
-      setPathNames(arrPathNames.join(' '));
     };
-    handleLetters();
+    handlePathNames();
   });
 
   const STATE = {

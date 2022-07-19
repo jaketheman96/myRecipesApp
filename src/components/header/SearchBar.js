@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import RecipesContext from '../../context/RecipesContext';
 
@@ -8,7 +8,6 @@ function SearchBar() {
     setSearchType,
     setSearchedData,
     setLoading,
-    loading,
     pathNames,
     searchedData,
   } = useContext(RecipesContext);
@@ -61,26 +60,49 @@ function SearchBar() {
     }
   };
 
+  useEffect(() => {
+    if (!searchedData) {
+      return null;
+    }
+    const handleIsDrinkOrFood = () => {
+      switch (pathNames) {
+      case 'Foods':
+        if (!searchedData.meals) {
+          global.alert('Sorry, we haven\'t found any recipes for these filters.');
+          return 'error';
+        }
+        if (searchedData.meals.length === 1) {
+          searchedData.meals.map(({ idMeal }) => {
+            history.push(`/foods/${idMeal}`);
+            return idMeal;
+          });
+        }
+        break;
+      case 'Drinks':
+        if (!searchedData.drinks) {
+          global.alert('Sorry, we haven\'t found any recipes for these filters.');
+          return 'error';
+        }
+        if (searchedData.drinks.length === 1) {
+          searchedData.drinks.map(({ idDrink }) => {
+            history.push(`/drinks/${idDrink}`);
+            return idDrink;
+          });
+        }
+        break;
+      default:
+      }
+    };
+    handleIsDrinkOrFood();
+  }, [searchedData]);
+
   const fetchApi = async () => {
     setLoading(true);
-    const fetching = await fetch(handleToggleFetch(pathNames));
-    const response = await fetching.json();
-    setSearchedData(response);
+    await fetch(handleToggleFetch(pathNames))
+      .then((response) => response.json())
+      .then((element) => setSearchedData(element))
+      .catch((error) => console.log(error));
     setLoading(false);
-    console.log(response.meals.length);
-    if (!loading) {
-      if (response.meals.length === 1 && pathNames === 'Foods') {
-        response.meals.map((element) => {
-          history.push(`/food/${element.idMeal}`);
-        });
-      }
-      if (response.drinks.length === 1 && pathNames === 'Drinks') {
-        response.drinks.map((element) => {
-          history.push(`/drink/${element.idDrink}`);
-        });
-        return element;
-      }
-    }
   };
 
   const handleChange = ({ target }) => {
