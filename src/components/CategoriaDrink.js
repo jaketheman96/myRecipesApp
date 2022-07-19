@@ -2,11 +2,14 @@ import React, { useEffect, useContext } from 'react';
 import RecipesContext from '../context/RecipesContext';
 
 export default function CategoriaDrink() {
-  const { categoriaDrink,
+  const {
+    drinkData,
+    categoriaDrink,
     setCategoriaDrink,
     resultCategoriaDrink,
     setResultCategoriaDrink,
-    setCategoriaRender } = useContext(RecipesContext);
+    setCategoriaRender,
+  } = useContext(RecipesContext);
 
   async function fetchCategoria() {
     return fetch('https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list')
@@ -38,7 +41,7 @@ export default function CategoriaDrink() {
       <button
         type="button"
         data-testid="All-category-filter"
-        /* onClick={} */
+        onClick={ () => setResultCategoriaDrink(drinkData) }
       >
         All
 

@@ -3,6 +3,7 @@ import RecipesContext from '../context/RecipesContext';
 
 export default function CatergoriaFood() {
   const {
+    foodData,
     categoriaFood,
     resultCategoriaFood,
     setCategoriaFood,
@@ -39,7 +40,7 @@ export default function CatergoriaFood() {
       <button
         type="button"
         data-testid="All-category-filter"
-        onClick={ () => setCategoriaRender(false) }
+        onClick={ () => setResultCategoriaFood(foodData) }
       >
         All
 

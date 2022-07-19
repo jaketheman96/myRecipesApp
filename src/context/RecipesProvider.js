@@ -14,12 +14,12 @@ function RecipesProvider({ children }) {
   const [foodData, setFoodData] = useState([]);
   const [drinkData, setDrinkData] = useState([]);
   const [pathNames, setPathNames] = useState('');
-  const { pathname } = useLocation();
   const [categoriaFood, setCategoriaFood] = useState([]);
   const [resultCategoriaFood, setResultCategoriaFood] = useState([]);
   const [categoriaDrink, setCategoriaDrink] = useState([]);
   const [resultCategoriaDrink, setResultCategoriaDrink] = useState([]);
   const [categoriaRender, setCategoriaRender] = useState(false);
+  const { pathname } = useLocation();
 
   useEffect(() => {
     const handlePathNames = () => {
