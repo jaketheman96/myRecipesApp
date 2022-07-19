@@ -8,6 +8,7 @@ export default function CatergoriaFood() {
     resultCategoriaFood,
     setCategoriaFood,
     setResultCategoriaFood,
+    categoriaRender,
     setCategoriaRender } = useContext(RecipesContext);
 
   async function fetchCategoria() {
@@ -30,8 +31,17 @@ export default function CatergoriaFood() {
 
   const categoriaButton = (cur) => {
     fetchResultCategoria(cur);
-    setCategoriaRender(true);
+    setCategoriaRender(!categoriaRender);
   };
+
+  useEffect(() => {
+    const handleConditionalRender = () => {
+      if (!categoriaRender) {
+        setResultCategoriaFood(foodData);
+      }
+    };
+    handleConditionalRender();
+  });
 
   const nrDeCategorias = 5;
   const nrDeReceitas = 12;
@@ -40,7 +50,10 @@ export default function CatergoriaFood() {
       <button
         type="button"
         data-testid="All-category-filter"
-        onClick={ () => setResultCategoriaFood(foodData) }
+        onClick={ () => {
+          setResultCategoriaFood(foodData);
+          setCategoriaRender(false);
+        } }
       >
         All
 

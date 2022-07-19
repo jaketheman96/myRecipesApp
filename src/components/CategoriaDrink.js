@@ -9,6 +9,7 @@ export default function CategoriaDrink() {
     resultCategoriaDrink,
     setResultCategoriaDrink,
     setCategoriaRender,
+    categoriaRender,
   } = useContext(RecipesContext);
 
   async function fetchCategoria() {
@@ -31,8 +32,17 @@ export default function CategoriaDrink() {
 
   const categoriaButton = (cur) => {
     fetchResultCategoria(cur);
-    setCategoriaRender(true);
+    setCategoriaRender(!categoriaRender);
   };
+
+  useEffect(() => {
+    const handleConditionalRender = () => {
+      if (!categoriaRender) {
+        setResultCategoriaDrink(drinkData);
+      }
+    };
+    handleConditionalRender();
+  });
 
   const nrDeCategorias = 5;
   const nrDeReceitas = 12;
