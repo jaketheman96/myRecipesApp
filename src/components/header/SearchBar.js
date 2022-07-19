@@ -96,7 +96,7 @@ function SearchBar() {
     handleIsDrinkOrFood();
   }, [searchedData]);
 
-  const fetchApi = async () => {
+  const fetchApiWhenClicked = async () => {
     setLoading(true);
     await fetch(handleToggleFetch(pathNames))
       .then((response) => response.json())
@@ -148,7 +148,7 @@ function SearchBar() {
       First Letter
       <button
         type="button"
-        onClick={ fetchApi }
+        onClick={ fetchApiWhenClicked }
         data-testid="exec-search-btn"
       >
         Search
