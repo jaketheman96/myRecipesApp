@@ -11,6 +11,8 @@ function RecipesProvider({ children }) {
   const [loading, setLoading] = useState(false);
   const [showSearchBox, setShowSearchBox] = useState(false);
   const [searchedData, setSearchedData] = useState(null);
+  const [foodData, setFoodData] = useState([]);
+  const [drinkData, setDrinkData] = useState([]);
   const [pathNames, setPathNames] = useState('');
   const { pathname } = useLocation();
   const [categoriaFood, setCategoriaFood] = useState([]);
@@ -41,6 +43,36 @@ function RecipesProvider({ children }) {
     handlePathNames();
   });
 
+  useEffect(() => {
+    function fetchFoodsApi() {
+      setLoading(true);
+      const url = 'https://www.themealdb.com/api/json/v1/1/search.php?s=';
+      fetch(url)
+        .then((response) => response.json())
+        .then((datas) => {
+          setFoodData(datas);
+          setLoading(false);
+        })
+        .catch((error) => console.log(error));
+    }
+    fetchFoodsApi();
+  }, []);
+
+  useEffect(() => {
+    function fetchDrinksApi() {
+      setLoading(true);
+      const url = 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=';
+      fetch(url)
+        .then((response) => response.json())
+        .then((datas) => {
+          setDrinkData(datas);
+          setLoading(false);
+        })
+        .catch((error) => console.log(error));
+    }
+    fetchDrinksApi();
+  }, []);
+
   const STATE = {
     userEmail,
     setUserEmail,
@@ -58,6 +90,10 @@ function RecipesProvider({ children }) {
     setShowSearchBox,
     pathNames,
     setPathNames,
+    foodData,
+    setFoodData,
+    drinkData,
+    setDrinkData,
     categoriaFood,
     setCategoriaFood,
     categoriaDrink,
