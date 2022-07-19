@@ -15,6 +15,8 @@ function RecipesProvider({ children }) {
   const [drinkData, setDrinkData] = useState([]);
   const [pathNames, setPathNames] = useState('');
   const { pathname } = useLocation();
+  const [categoriaFood, setCategoriaFood] = useState([]);
+  const [categoriaDrink, setCategoriaDrink] = useState([]);
 
   useEffect(() => {
     const handlePathNames = () => {
@@ -91,6 +93,10 @@ function RecipesProvider({ children }) {
     setFoodData,
     drinkData,
     setDrinkData,
+    categoriaFood,
+    setCategoriaFood,
+    categoriaDrink,
+    setCategoriaDrink,
   };
 
   return (
