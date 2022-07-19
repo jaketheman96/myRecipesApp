@@ -13,6 +13,8 @@ function RecipesProvider({ children }) {
   const [searchedData, setSearchedData] = useState(null);
   const [pathNames, setPathNames] = useState('');
   const { pathname } = useLocation();
+  const [categoriaFood, setCategoriaFood] = useState([]);
+  const [categoriaDrink, setCategoriaDrink] = useState([]);
 
   useEffect(() => {
     const handlePathNames = () => {
@@ -55,6 +57,10 @@ function RecipesProvider({ children }) {
     setShowSearchBox,
     pathNames,
     setPathNames,
+    categoriaFood,
+    setCategoriaFood,
+    categoriaDrink,
+    setCategoriaDrink,
   };
 
   return (
