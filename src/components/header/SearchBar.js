@@ -10,6 +10,7 @@ function SearchBar() {
     setLoading,
     pathNames,
     searchedData,
+    setIsSearching,
   } = useContext(RecipesContext);
 
   const [searchValue, setSearchValue] = useState('');
@@ -98,6 +99,7 @@ function SearchBar() {
 
   const fetchApiWhenClicked = async () => {
     setLoading(true);
+    setIsSearching(true);
     await fetch(handleToggleFetch(pathNames))
       .then((response) => response.json())
       .then((element) => setSearchedData(element))

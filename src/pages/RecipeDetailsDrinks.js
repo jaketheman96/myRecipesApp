@@ -2,13 +2,13 @@ import React, { useContext } from 'react';
 import RecipesContext from '../context/RecipesContext';
 
 function RecipeDetailsDrinks() {
-  const { searchedData, loading } = useContext(RecipesContext);
+  const { drinkData: { drinks }, loading, savingId } = useContext(RecipesContext);
 
   return (
     <section>
       Recipe details Drinks
       {!loading
-        ? searchedData.drinks.map((element, index) => (
+        ? drinks.filter(({ idDrink }) => idDrink === savingId).map((element, index) => (
           <div key={ index }>
             <img
               src={ element.strDrinkThumb }

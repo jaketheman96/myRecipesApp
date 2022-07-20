@@ -1,4 +1,5 @@
 import React, { useEffect, useContext } from 'react';
+import { Link } from 'react-router-dom';
 import RecipesContext from '../context/RecipesContext';
 
 export default function CategoriaDrink() {
@@ -10,6 +11,7 @@ export default function CategoriaDrink() {
     setResultCategoriaDrink,
     setCategoriaRender,
     categoriaRender,
+    setSavingId,
   } = useContext(RecipesContext);
 
   async function fetchCategoria() {
@@ -51,7 +53,10 @@ export default function CategoriaDrink() {
       <button
         type="button"
         data-testid="All-category-filter"
-        onClick={ () => setResultCategoriaDrink(drinkData) }
+        onClick={ () => {
+          setResultCategoriaDrink(drinkData);
+          setCategoriaRender(false);
+        } }
       >
         All
 
@@ -72,16 +77,22 @@ export default function CategoriaDrink() {
       <section>
         { resultCategoriaDrink.drinks
            && resultCategoriaDrink.drinks.slice(0, nrDeReceitas).map((drink, index) => (
-             <div key={ drink.idDrink } data-testid={ `${index}-recipe-card` }>
-               <h1 data-testid={ `${index}-card-name` }>{ drink.strDrink }</h1>
-               <img
-                 src={ drink.strDrinkThumb }
-                 alt={ drink.strDrink }
-                 data-testid={ `${index}-card-img` }
-                 width="50"
-                 height="50"
-               />
-             </div>
+             <Link
+               to={ `/drinks/${drink.idDrink}` }
+               key={ drink.idDrink }
+               onClick={ () => setSavingId(drink.idDrink) }
+             >
+               <div key={ drink.idDrink } data-testid={ `${index}-recipe-card` }>
+                 <h1 data-testid={ `${index}-card-name` }>{ drink.strDrink }</h1>
+                 <img
+                   src={ drink.strDrinkThumb }
+                   alt={ drink.strDrink }
+                   data-testid={ `${index}-card-img` }
+                   width="50"
+                   height="50"
+                 />
+               </div>
+             </Link>
            )) }
       </section>
     </div>
