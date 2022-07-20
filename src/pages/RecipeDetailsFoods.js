@@ -1,8 +1,24 @@
 import React, { useContext } from 'react';
+/* import { match } from 'react-router-dom'; */
 import RecipesContext from '../context/RecipesContext';
 
 function RecipeDetailsFoods() {
   const { searchedData, loading } = useContext(RecipesContext);
+  /*   const id = match.param.id;
+  console.log(id); */
+
+  async function fetchSearchDetails(cat) {
+    fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${cat}`)
+      .then((raw) => raw.json())
+      .then((data) => setFoodDetails(data))
+      .catch((err) => console.log(err));
+  }
+
+  useEffect(() => {
+    fetchCategoria().then((data) => {
+      setCategoriaFood(data.meals);
+    });
+  }, []);
 
   return (
     <section>
