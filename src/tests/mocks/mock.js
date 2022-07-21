@@ -1,0 +1,1 @@
+export const tomatoMock = ['Brown Stew Chicken', 'Callaloo Jamaican Style', 'Chivito uruguayo', 'Kapsalon', 'Lasagna Sandwiches', 'Matar Paneer', 'Moussaka', 'Ratatouille', 'Vegetarian Casserole'];
