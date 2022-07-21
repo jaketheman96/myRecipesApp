@@ -107,7 +107,12 @@ function RecipeDetailsDrinks({ match: { params: { id } } }) {
             Back to recipes
           </a>
         </button>
-        <button id="start-recipe-btn" type="button" data-testid="start-recipe-btn">
+        <button
+          id="start-recipe-btn"
+          type="button"
+          data-testid="start-recipe-btn"
+          style={ { position: 'fixed' } }
+        >
           Start Recipe
         </button>
       </footer>

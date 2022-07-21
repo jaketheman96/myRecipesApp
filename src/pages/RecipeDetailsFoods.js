@@ -129,7 +129,7 @@ function RecipeDetailsFoods({ match: { params: { id } } }) {
           id="start-recipe-btn"
           type="button"
           data-testid="start-recipe-btn"
-          className={ styles.button }
+          style={ { position: 'fixed' } }
         >
           Start Recipe
         </button>
