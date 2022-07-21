@@ -14,7 +14,7 @@ function RecipeDetailsFoods({ match: { params: { id } } }) {
 
   useEffect(() => {
     const array = [];
-    const size = 10;
+    const size = 20;
     for (let i = 1; i <= size; i += 1) {
       array.push(i);
     }
@@ -32,9 +32,6 @@ function RecipeDetailsFoods({ match: { params: { id } } }) {
           setUrlFood(data.meals.map(({ strYoutube }) => (
             strYoutube.replace('watch?v=', 'embed/')
           )));
-          // setIngredients(data.meals.filter((element, index) => (
-          //   element[`strIngredient${index}`] !== null
-          // )));
         })
         .catch((error) => console.log(error));
     };
@@ -69,17 +66,20 @@ function RecipeDetailsFoods({ match: { params: { id } } }) {
             <p data-testid="recipe-category">{ `Categoria: ${element.strCategory}` }</p>
             <ul>
               { arrayOfNum && arrayOfNum.map((number, position) => (
-                <li
+                <div
                   key={ number }
-                  data-testid={ `${position}-ingredient-name-and-measure` }
+                  data-testid={ `${position}-recomendation-card` }
                 >
-                  <p>
-                    { element[`strIngredient${number}`] }
-                  </p>
-                  <p>
-                    { element[`strMeasure${number}`] }
-                  </p>
-                </li>))}
+                  <li
+                    data-testid={ `${position}-ingredient-name-and-measure` }
+                  >
+                    <p>
+                      { `${element[`strIngredient${number}`]} 
+                      ${element[`strMeasure${number}`]}` }
+                    </p>
+                  </li>
+                </div>
+              ))}
             </ul>
             <p data-testid="instructions">
               { `Instructions: ${element.strInstructions}` }

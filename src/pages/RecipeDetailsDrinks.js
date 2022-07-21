@@ -47,18 +47,21 @@ function RecipeDetailsDrinks({ match: { params: { id } } }) {
             <h3 data-testid="recipe-category">{ element.strAlcoholic }</h3>
             <p data-testid="instructions">{ element.strInstructions }</p>
             <ul>
-              { arrayOfNum && arrayOfNum.map((number) => (
-                <li
+              { arrayOfNum && arrayOfNum.map((number, position) => (
+                <div
                   key={ number }
-                  data-testid={ `${number}-ingredient-name-and-measure` }
+                  data-testid={ `${position}-recomendation-card` }
                 >
-                  <p>
-                    { element[`strIngredient${number}`] }
-                  </p>
-                  <p>
-                    { element[`strMeasure${number}`] }
-                  </p>
-                </li>))}
+                  <li
+                    data-testid={ `${position}-ingredient-name-and-measure` }
+                  >
+                    <p>
+                      { `${element[`strIngredient${number}`]} 
+                    ${element[`strMeasure${number}`]}` }
+                    </p>
+                  </li>
+                </div>
+              ))}
             </ul>
           </div>
         ))
