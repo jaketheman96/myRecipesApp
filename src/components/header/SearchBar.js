@@ -11,6 +11,7 @@ function SearchBar() {
     pathNames,
     searchedData,
     setIsSearching,
+    setSavingId,
   } = useContext(RecipesContext);
 
   const [searchValue, setSearchValue] = useState('');
@@ -74,6 +75,7 @@ function SearchBar() {
         }
         if (searchedData.meals.length === 1) {
           searchedData.meals.map(({ idMeal }) => {
+            setSavingId(idMeal);
             history.push(`/foods/${idMeal}`);
             return idMeal;
           });
@@ -86,6 +88,7 @@ function SearchBar() {
         }
         if (searchedData.drinks.length === 1) {
           searchedData.drinks.map(({ idDrink }) => {
+            setSavingId(idDrink);
             history.push(`/drinks/${idDrink}`);
             return idDrink;
           });
