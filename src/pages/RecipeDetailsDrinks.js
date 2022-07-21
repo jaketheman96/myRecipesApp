@@ -67,6 +67,17 @@ function RecipeDetailsDrinks({ match: { params: { id } } }) {
           </div>
         ))
         : <p>Loading...</p>}
+      <footer>
+        <button type="button">
+          <a href="/drinks">
+            <i className="fas fa-arrow-left" />
+            Back to recipes
+          </a>
+        </button>
+        <button id="start-recipe-btn" type="button" data-testid="start-recipe-btn">
+          Start Recipe
+        </button>
+      </footer>
     </section>
   );
 }
