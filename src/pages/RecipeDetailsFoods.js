@@ -10,11 +10,10 @@ function RecipeDetailsFoods({ match: { params: { id } } }) {
   const [foodDetails, setFoodDetails] = useState(null);
   const [arrayOfNum, setArrayOfNum] = useState([]);
   const [urlFood, setUrlFood] = useState('');
-  // const [ingredients, setIngredients] = useState(null);
 
   useEffect(() => {
     const array = [];
-    const size = 20;
+    const size = 15;
     for (let i = 1; i <= size; i += 1) {
       array.push(i);
     }
@@ -64,26 +63,25 @@ function RecipeDetailsFoods({ match: { params: { id } } }) {
               />
             </div>
             <p data-testid="recipe-category">{ `Categoria: ${element.strCategory}` }</p>
-            <ul>
-              { arrayOfNum && arrayOfNum.map((number, position) => (
-                <div
-                  key={ number }
-                  data-testid={ `${position}-recomendation-card` }
-                >
-                  <li
-                    data-testid={ `${position}-ingredient-name-and-measure` }
-                  >
-                    <p>
-                      { `${element[`strIngredient${number}`]} 
-                      ${element[`strMeasure${number}`]}` }
-                    </p>
-                  </li>
-                </div>
-              ))}
-            </ul>
             <p data-testid="instructions">
               { `Instructions: ${element.strInstructions}` }
             </p>
+            <ul>
+              { arrayOfNum && arrayOfNum.map((number, position) => (
+                <li
+                  key={ number }
+                  data-testid={ `${position}-ingredient-name-and-measure` }
+                >
+                  <p>
+                    { `${element[`strIngredient${number}`]} 
+                      ${element[`strMeasure${number}`]}` }
+                  </p>
+                </li>
+              ))}
+            </ul>
+            <div
+              data-testid={ `${index}-recomendation-card` }
+            />
           </div>
         ))
         : <p>Loading...</p>}

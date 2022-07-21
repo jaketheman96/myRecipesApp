@@ -8,11 +8,11 @@ function RecipeDetailsDrinks({ match: { params: { id } } }) {
   } = useContext(RecipesContext);
 
   const [drinkDetails, setDrinkDetails] = useState(null);
-  const [arrayOfNum, setArrayOfNum] = useState([]);
+  const [arrayOfNum, setArrayOfNum] = useState(null);
 
   useEffect(() => {
     const array = [];
-    const size = 10;
+    const size = 5;
     for (let i = 1; i <= size; i += 1) {
       array.push(i);
     }
@@ -43,26 +43,27 @@ function RecipeDetailsDrinks({ match: { params: { id } } }) {
               data-testid="recipe-photo"
               width="200"
             />
-            <h1 data-testid="recipe-title">{ element.strDrink }</h1>
-            <h3 data-testid="recipe-category">{ element.strAlcoholic }</h3>
-            <p data-testid="instructions">{ element.strInstructions }</p>
+            <h1 data-testid="recipe-title">{element.strDrink}</h1>
+            <h3 data-testid="recipe-category">{element.strAlcoholic}</h3>
+            <p data-testid="instructions">{element.strInstructions}</p>
             <ul>
-              { arrayOfNum && arrayOfNum.map((number, position) => (
-                <div
+              {arrayOfNum && arrayOfNum.map((number, position) => (
+                <li
                   key={ number }
-                  data-testid={ `${position}-recomendation-card` }
+                  data-testid={ `${position}-ingredient-name-and-measure` }
                 >
-                  <li
-                    data-testid={ `${position}-ingredient-name-and-measure` }
-                  >
-                    <p>
-                      { `${element[`strIngredient${number}`]} 
-                    ${element[`strMeasure${number}`]}` }
-                    </p>
-                  </li>
-                </div>
+                  <p>
+                    {element[`strIngredient${number}`]}
+                    {' '}
+                    {!element[`strMeasure${number}`] ? ''
+                      : element[`strMeasure${number}`]}
+                  </p>
+                </li>
               ))}
             </ul>
+            <div
+              data-testid={ `${index}-recomendation-card` }
+            />
           </div>
         ))
         : <p>Loading...</p>}
