@@ -1,15 +1,29 @@
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import Carousel from 'react-bootstrap/Carousel';
 import RecipesContext from '../context/RecipesContext';
+
+const RECIPES = 6;
 
 function RecipeDetailsFoods({ match: { params: { id } } }) {
   const {
     setLoading,
+    drinkData,
   } = useContext(RecipesContext);
 
   const [foodDetails, setFoodDetails] = useState(null);
   const [arrayOfNum, setArrayOfNum] = useState([]);
   const [urlFood, setUrlFood] = useState('');
+  const [recomendations, setRecomendations] = useState(null);
+
+  useEffect(() => {
+    const handleRecomendations = () => {
+      if (drinkData.length !== 0) {
+        return drinkData.drinks.slice(0, RECIPES);
+      }
+    };
+    setRecomendations(handleRecomendations());
+  }, [drinkData]);
 
   useEffect(() => {
     const array = [];
@@ -39,8 +53,10 @@ function RecipeDetailsFoods({ match: { params: { id } } }) {
   }, []);
 
   return (
-    <section>
-      {foodDetails
+    <section
+      style={ { backgroundColor: 'grey' } }
+    >
+      {foodDetails && recomendations
         ? foodDetails.meals.map((element, index) => (
           <div key={ index }>
             <img
@@ -51,11 +67,31 @@ function RecipeDetailsFoods({ match: { params: { id } } }) {
               height="200"
             />
             <h1 data-testid="recipe-title">{ element.strMeal }</h1>
+            <p>Recomendacoes:</p>
+            <Carousel>
+              {recomendations.map((recomend, position) => (
+                <Carousel.Item
+                  key={ position }
+                  data-testid={ `${position}-recomendation-card` }
+                >
+                  <img
+                    src={ recomend.strDrinkThumb }
+                    alt={ recomend.strDrink }
+                    width="100"
+                  />
+                  <h1
+                    data-testid={ `${position}-recomendation-title` }
+                  >
+                    { recomend.strDrink }
+                  </h1>
+                </Carousel.Item>
+              ))}
+            </Carousel>
             <div>
               <iframe
                 width="300"
                 height="200"
-                src={ urlFood && urlFood.map((video) => video) }
+                src={ urlFood }
                 title="Youtube Player"
                 data-testid="video"
                 frameBorder="0"
@@ -79,9 +115,6 @@ function RecipeDetailsFoods({ match: { params: { id } } }) {
                 </li>
               ))}
             </ul>
-            <div
-              data-testid={ `${index}-recomendation-card` }
-            />
           </div>
         ))
         : <p>Loading...</p>}

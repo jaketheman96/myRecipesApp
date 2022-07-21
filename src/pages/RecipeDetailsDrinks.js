@@ -1,14 +1,19 @@
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import Carousel from 'react-bootstrap/Carousel';
 import RecipesContext from '../context/RecipesContext';
+
+const RECIPES = 6;
 
 function RecipeDetailsDrinks({ match: { params: { id } } }) {
   const {
     setLoading,
+    foodData,
   } = useContext(RecipesContext);
 
   const [drinkDetails, setDrinkDetails] = useState(null);
   const [arrayOfNum, setArrayOfNum] = useState(null);
+  const [recomendations, setRecomendations] = useState(null);
 
   useEffect(() => {
     const array = [];
@@ -18,6 +23,15 @@ function RecipeDetailsDrinks({ match: { params: { id } } }) {
     }
     setArrayOfNum(array);
   }, []);
+
+  useEffect(() => {
+    const handleRecomendations = () => {
+      if (foodData.length !== 0) {
+        return foodData.meals.slice(0, RECIPES);
+      }
+    };
+    setRecomendations(handleRecomendations());
+  }, [foodData]);
 
   useEffect(() => {
     const fetchDrinkDetails = async () => {
@@ -33,8 +47,10 @@ function RecipeDetailsDrinks({ match: { params: { id } } }) {
   }, []);
 
   return (
-    <section>
-      {drinkDetails
+    <section
+      style={ { backgroundColor: 'grey' } }
+    >
+      {drinkDetails && recomendations
         ? drinkDetails.drinks.map((element, index) => (
           <div key={ index }>
             <img
@@ -44,6 +60,26 @@ function RecipeDetailsDrinks({ match: { params: { id } } }) {
               width="200"
             />
             <h1 data-testid="recipe-title">{element.strDrink}</h1>
+            <p>Recomendacoes:</p>
+            <Carousel>
+              {recomendations.map((recomend, position) => (
+                <Carousel.Item
+                  key={ position }
+                  data-testid={ `${position}-recomendation-card` }
+                >
+                  <img
+                    src={ recomend.strMealThumb }
+                    alt={ recomend.strMeal }
+                    width="100"
+                  />
+                  <h1
+                    data-testid={ `${position}-recomendation-title` }
+                  >
+                    { recomend.strMeal }
+                  </h1>
+                </Carousel.Item>
+              ))}
+            </Carousel>
             <h3 data-testid="recipe-category">{element.strAlcoholic}</h3>
             <p data-testid="instructions">{element.strInstructions}</p>
             <ul>
@@ -61,9 +97,6 @@ function RecipeDetailsDrinks({ match: { params: { id } } }) {
                 </li>
               ))}
             </ul>
-            <div
-              data-testid={ `${index}-recomendation-card` }
-            />
           </div>
         ))
         : <p>Loading...</p>}
