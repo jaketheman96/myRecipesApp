@@ -1,22 +1,20 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import RecipesContext from '../context/RecipesContext';
-import MainFood from './MainFood';
 
 export default function FoodCard() {
   const nrDeReceitas = 12;
-  const { searchedData, setSavingId } = useContext(RecipesContext);
+  const { searchedData } = useContext(RecipesContext);
 
   return (
-    <section>
+    <section className="foodCard">
       { searchedData && (
         <div className="teste">
           { searchedData.meals
-            ? searchedData.meals.slice(0, nrDeReceitas).map((element, index) => (
+            && searchedData.meals.slice(0, nrDeReceitas).map((element, index) => (
               <Link
                 to={ `/foods/${element.idMeal}` }
                 key={ element.idMeal }
-                onClick={ () => setSavingId(element.idMeal) }
               >
                 <div key={ element.idMeal } data-testid={ `${index}-recipe-card` }>
                   <h1 data-testid={ `${index}-card-name` }>{ element.strMeal }</h1>
@@ -29,7 +27,7 @@ export default function FoodCard() {
                   />
                 </div>
               </Link>
-            )) : <MainFood /> }
+            ))}
         </div>
       ) }
     </section>

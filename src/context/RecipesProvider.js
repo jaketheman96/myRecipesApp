@@ -20,7 +20,6 @@ function RecipesProvider({ children }) {
   const [categoriaDrink, setCategoriaDrink] = useState([]);
   const [resultCategoriaDrink, setResultCategoriaDrink] = useState([]);
   const [categoriaRender, setCategoriaRender] = useState(false);
-  const [savingId, setSavingId] = useState('');
   const { pathname } = useLocation();
 
   useEffect(() => {
@@ -110,8 +109,6 @@ function RecipesProvider({ children }) {
     setCategoriaRender,
     isSearching,
     setIsSearching,
-    savingId,
-    setSavingId,
   };
 
   return (
