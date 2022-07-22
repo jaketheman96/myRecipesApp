@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import RecipesContext from '../context/RecipesContext';
 
 function MainDrink() {
-  const { drinkData: { drinks }, setSavingId } = useContext(RecipesContext);
+  const { resultCategoriaDrink: { drinks } } = useContext(RecipesContext);
   const nrDeReceitas = 12;
 
   return (
@@ -12,7 +12,6 @@ function MainDrink() {
         <Link
           to={ `/drinks/${element.idDrink}` }
           key={ element.idDrink }
-          onClick={ () => setSavingId(element.idDrink) }
         >
           <div key={ element.idDrink } data-testid={ `${index}-recipe-card` }>
             <h1 data-testid={ `${index}-card-name` }>{ element.strDrink }</h1>

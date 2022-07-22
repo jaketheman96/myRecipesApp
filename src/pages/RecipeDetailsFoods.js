@@ -5,10 +5,10 @@ import { useHistory } from 'react-router-dom';
 import clipboardCopy from 'clipboard-copy';
 import shareIcon from '../images/shareIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
 import RecipesContext from '../context/RecipesContext';
 
 const RECIPES = 6;
-// const copy = require('clipboard-copy');
 
 function RecipeDetailsFoods({ match: { url, params: { id } } }) {
   const {
@@ -87,6 +87,15 @@ function RecipeDetailsFoods({ match: { url, params: { id } } }) {
         localStorage.setItem('favoriteRecipes', JSON.stringify(getItem.concat(obj)));
       }
     });
+    // return blackHeartIcon;
+  };
+
+  const handleConditional = () => {
+    const getStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    if (getStorage && getStorage.some((item) => item.id === id)) {
+      return blackHeartIcon;
+    }
+    return whiteHeartIcon;
   };
 
   return (
@@ -121,7 +130,7 @@ function RecipeDetailsFoods({ match: { url, params: { id } } }) {
               { copySuccess }
               <input
                 type="image"
-                src={ whiteHeartIcon }
+                src={ handleConditional() }
                 alt="Favorite Button"
                 name="favorite-btn"
                 data-testid="favorite-btn"

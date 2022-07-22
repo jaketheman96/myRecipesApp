@@ -6,12 +6,12 @@ function SearchBar() {
   const {
     searchType,
     setSearchType,
-    setSearchedData,
     setLoading,
     pathNames,
     searchedData,
     setIsSearching,
     setSavingId,
+    setSearchedData,
   } = useContext(RecipesContext);
 
   const [searchValue, setSearchValue] = useState('');
@@ -106,7 +106,9 @@ function SearchBar() {
     setIsSearching(true);
     await fetch(handleToggleFetch(pathNames))
       .then((response) => response.json())
-      .then((element) => setSearchedData(element))
+      .then((element) => {
+        setSearchedData(element);
+      })
       .catch((error) => console.log(error));
     setLoading(false);
   };

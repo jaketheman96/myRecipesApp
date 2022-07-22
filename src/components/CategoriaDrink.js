@@ -1,17 +1,18 @@
 import React, { useEffect, useContext } from 'react';
-import { Link } from 'react-router-dom';
 import RecipesContext from '../context/RecipesContext';
+import DrinkCard from './DrinkCard';
+import MainDrink from './MainDrink';
 
 export default function CategoriaDrink() {
   const {
     drinkData,
     categoriaDrink,
     setCategoriaDrink,
-    resultCategoriaDrink,
     setResultCategoriaDrink,
     setCategoriaRender,
     categoriaRender,
-    setSavingId,
+    isSearching,
+    setIsSearching,
   } = useContext(RecipesContext);
 
   async function fetchCategoria() {
@@ -47,7 +48,6 @@ export default function CategoriaDrink() {
   });
 
   const nrDeCategorias = 5;
-  const nrDeReceitas = 12;
   return (
     <div>
       <button
@@ -67,7 +67,10 @@ export default function CategoriaDrink() {
             key={ index }
             type="button"
             data-testid={ `${drink.strCategory}-category-filter` }
-            onClick={ () => { categoriaButton(drink.strCategory); } }
+            onClick={ () => {
+              categoriaButton(drink.strCategory);
+              setIsSearching(false);
+            } }
           >
             {drink.strCategory}
 
@@ -75,25 +78,7 @@ export default function CategoriaDrink() {
         ))}
       </section>
       <section>
-        { resultCategoriaDrink.drinks
-           && resultCategoriaDrink.drinks.slice(0, nrDeReceitas).map((drink, index) => (
-             <Link
-               to={ `/drinks/${drink.idDrink}` }
-               key={ drink.idDrink }
-               onClick={ () => setSavingId(drink.idDrink) }
-             >
-               <div key={ drink.idDrink } data-testid={ `${index}-recipe-card` }>
-                 <h1 data-testid={ `${index}-card-name` }>{ drink.strDrink }</h1>
-                 <img
-                   src={ drink.strDrinkThumb }
-                   alt={ drink.strDrink }
-                   data-testid={ `${index}-card-img` }
-                   width="50"
-                   height="50"
-                 />
-               </div>
-             </Link>
-           )) }
+        {isSearching ? <DrinkCard /> : <MainDrink />}
       </section>
     </div>
   );
