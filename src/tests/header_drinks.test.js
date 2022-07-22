@@ -93,4 +93,19 @@ describe('Testes do componente Header:', () => {
       expect(alertMock).toHaveBeenCalledTimes(1);
     }, { timeout: 3000 });
   });
+
+  it('6. Os resultados não são atualizados se nenhum radio button for selecionado;', async () => {
+    userEvent.click(screen.getByTestId('search-top-btn'));
+    const searchBar = screen.getByTestId('search-input');
+    const searchBtn = screen.getByTestId('exec-search-btn');
+
+    await waitFor(() => {
+      expect(screen.getByTestId('0-card-name')).toBeInTheDocument();
+    }, { timeout: 3000 });
+
+    userEvent.type(searchBar, 'ice');
+    userEvent.click(searchBtn);
+
+    expect((screen.getByTestId('0-card-name')).innerHTML).toBe('GG');
+  });
 });

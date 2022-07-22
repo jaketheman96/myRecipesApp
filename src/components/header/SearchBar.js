@@ -29,7 +29,7 @@ function SearchBar() {
       }
       break;
     default:
-      return searchType;
+      break;
     }
   };
 
@@ -47,7 +47,7 @@ function SearchBar() {
       }
       break;
     default:
-      return searchType;
+      break;
     }
   };
 

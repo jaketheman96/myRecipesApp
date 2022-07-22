@@ -71,9 +71,6 @@ describe('Testes do componente Header:', () => {
     await waitFor(() => {
       dLetterFoods.forEach((name) => expect(screen.getByText(name)).toBeInTheDocument());
     }, { timeout: 3000 });
-
-
-
   });
 
   it('5. A busca retorna um alerta caso não encontre resultados;', async () => {
@@ -115,5 +112,20 @@ describe('Testes do componente Header:', () => {
     await waitFor(() => {
       expect(screen.getByText('Profile')).toBeInTheDocument();
     }, { timeout: 3000 });
+  });
+
+  it('8. Os resultados não são atualizados se nenhum radio button for selecionado;', async () => {
+    userEvent.click(screen.getByTestId('search-top-btn'));
+    const searchBar = screen.getByTestId('search-input');
+    const searchBtn = screen.getByTestId('exec-search-btn');
+
+    await waitFor(() => {
+      expect(screen.getByTestId('0-card-name')).toBeInTheDocument();
+    }, { timeout: 3000 });
+
+    userEvent.type(searchBar, 'tomato');
+    userEvent.click(searchBtn);
+
+    expect((screen.getByTestId('0-card-name')).innerHTML).toBe('Corba');
   });
 });
