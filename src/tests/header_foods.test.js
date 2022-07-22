@@ -1,7 +1,7 @@
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event'
 import renderWithRoute from './helpers/renderWithRoute';
-import { tomatoMock, aLetterMock, dLetterMock } from './mocks/mock';
+import { tomatoMock, aLetterFoods, dLetterFoods } from './mocks/mock';
 
 describe('Testes do componente Header:', () => {
   beforeEach(() => renderWithRoute('/foods'));
@@ -59,17 +59,17 @@ describe('Testes do componente Header:', () => {
     userEvent.click(searchBtn);
 
     await waitFor(() => {
-      aLetterMock.forEach((name) => expect(screen.getByText(name)).toBeInTheDocument());
+      aLetterFoods.forEach((name) => expect(screen.getByText(name)).toBeInTheDocument());
     }, { timeout: 3000 });
 
-    /* dLetterMock.forEach((name) => expect(screen.getByText(name)).not.toBeInTheDocument()); */
+    /* dLetterFoods.forEach((name) => expect(screen.getByText(name)).not.toBeInTheDocument()); */
 
     userEvent.clear(searchBar);
     userEvent.type(searchBar, 'd');
     userEvent.click(searchBtn);
 
     await waitFor(() => {
-      dLetterMock.forEach((name) => expect(screen.getByText(name)).toBeInTheDocument());
+      dLetterFoods.forEach((name) => expect(screen.getByText(name)).toBeInTheDocument());
     }, { timeout: 3000 });
 
 
