@@ -31,7 +31,8 @@ function SearchBar() {
       }
       break;
     default:
-      return searchType;
+      break;
+      // return searchType;
     }
   };
 

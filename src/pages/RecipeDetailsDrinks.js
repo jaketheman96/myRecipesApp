@@ -64,6 +64,8 @@ function RecipeDetailsDrinks({ match: { url, params: { id } } }) {
     drinks.forEach((element) => {
       const obj = {
         id: element.idDrink,
+        type: 'drink',
+        nationality: '',
         category: element.strCategory,
         alcoholicOrNot: element.strAlcoholic,
         name: element.strDrink,
