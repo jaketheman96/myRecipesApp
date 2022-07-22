@@ -1,11 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Carousel from 'react-bootstrap/Carousel';
+import { useHistory } from 'react-router-dom';
+import shareIcon from '../images/shareIcon.svg';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import RecipesContext from '../context/RecipesContext';
 
 const RECIPES = 6;
+const copy = require('clipboard-copy');
 
-function RecipeDetailsDrinks({ match: { params: { id } } }) {
+function RecipeDetailsDrinks({ match: { url, params: { id } } }) {
   const {
     setLoading,
     foodData,
@@ -14,6 +18,8 @@ function RecipeDetailsDrinks({ match: { params: { id } } }) {
   const [drinkDetails, setDrinkDetails] = useState(null);
   const [arrayOfNum, setArrayOfNum] = useState(null);
   const [recomendations, setRecomendations] = useState(null);
+  const [copySuccess, setCopySuccess] = useState('');
+  const history = useHistory();
 
   useEffect(() => {
     const array = [];
@@ -35,9 +41,9 @@ function RecipeDetailsDrinks({ match: { params: { id } } }) {
 
   useEffect(() => {
     const fetchDrinkDetails = async () => {
-      const url = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`;
+      const urlApi = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`;
       setLoading(true);
-      fetch(url)
+      fetch(urlApi)
         .then((response) => response.json())
         .then((data) => setDrinkDetails(data))
         .catch((error) => console.log(error));
@@ -45,6 +51,35 @@ function RecipeDetailsDrinks({ match: { params: { id } } }) {
     fetchDrinkDetails();
     setLoading(false);
   }, []);
+
+  const handleShareClick = () => {
+    copy(`http://localhost:3000${url}`);
+    setCopySuccess('Link copied!');
+  };
+
+  const handleFavoriteClick = () => {
+    const { drinks } = drinkDetails;
+    let getItem = localStorage.getItem('favoriteRecipes');
+    const array = [];
+    drinks.forEach((element) => {
+      const obj = {
+        id: element.idDrink,
+        type: 'drink',
+        nationality: '',
+        category: element.strCategory,
+        alcoholicOrNot: element.strAlcoholic,
+        name: element.strDrink,
+        image: element.strDrinkThumb,
+      };
+      if (!getItem) {
+        array.push(obj);
+        localStorage.setItem('favoriteRecipes', JSON.stringify(array));
+      } else {
+        getItem = JSON.parse(getItem);
+        localStorage.setItem('favoriteRecipes', JSON.stringify(getItem.concat(obj)));
+      }
+    });
+  };
 
   return (
     <section
@@ -60,8 +95,32 @@ function RecipeDetailsDrinks({ match: { params: { id } } }) {
               width="200"
             />
             <h1 data-testid="recipe-title">{element.strDrink}</h1>
-            <p>Recomendacoes:</p>
+            <div
+              style={ {
+                display: 'flex',
+                justifyContent: 'space-around',
+              } }
+            >
+              <input
+                type="image"
+                src={ shareIcon }
+                alt="Share Button"
+                name="share-btn"
+                data-testid="share-btn"
+                onClick={ handleShareClick }
+              />
+              { copySuccess }
+              <input
+                type="image"
+                src={ whiteHeartIcon }
+                alt="Favorite Button"
+                name="favorite-btn"
+                data-testid="favorite-btn"
+                onClick={ handleFavoriteClick }
+              />
+            </div>
             <Carousel>
+              <p>Recomendacoes:</p>
               {recomendations.map((recomend, position) => (
                 <Carousel.Item
                   key={ position }
@@ -112,6 +171,7 @@ function RecipeDetailsDrinks({ match: { params: { id } } }) {
           type="button"
           data-testid="start-recipe-btn"
           style={ { position: 'fixed' } }
+          onClick={ () => history.push(`/drinks/${id}/in-progress`) }
         >
           Start Recipe
         </button>
@@ -122,6 +182,7 @@ function RecipeDetailsDrinks({ match: { params: { id } } }) {
 
 RecipeDetailsDrinks.propTypes = {
   match: PropTypes.shape({
+    url: PropTypes.string.isRequired,
     params: PropTypes.shape(
       PropTypes.string.isRequired,
     ).isRequired,

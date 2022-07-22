@@ -1,11 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Carousel from 'react-bootstrap/Carousel';
+import { useHistory } from 'react-router-dom';
+import clipboardCopy from 'clipboard-copy';
+import shareIcon from '../images/shareIcon.svg';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import RecipesContext from '../context/RecipesContext';
 
 const RECIPES = 6;
+// const copy = require('clipboard-copy');
 
-function RecipeDetailsFoods({ match: { params: { id } } }) {
+function RecipeDetailsFoods({ match: { url, params: { id } } }) {
   const {
     setLoading,
     drinkData,
@@ -15,6 +20,9 @@ function RecipeDetailsFoods({ match: { params: { id } } }) {
   const [arrayOfNum, setArrayOfNum] = useState([]);
   const [urlFood, setUrlFood] = useState('');
   const [recomendations, setRecomendations] = useState(null);
+  const [copySuccess, setCopySuccess] = useState('');
+
+  const history = useHistory();
 
   useEffect(() => {
     const handleRecomendations = () => {
@@ -36,9 +44,9 @@ function RecipeDetailsFoods({ match: { params: { id } } }) {
 
   useEffect(() => {
     const fetchFoodDetails = async () => {
-      const url = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`;
+      const urlApi = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`;
       setLoading(true);
-      fetch(url)
+      fetch(urlApi)
         .then((response) => response.json())
         .then((data) => {
           setFoodDetails(data);
@@ -51,6 +59,35 @@ function RecipeDetailsFoods({ match: { params: { id } } }) {
     fetchFoodDetails();
     setLoading(false);
   }, []);
+
+  const handleShareClick = () => {
+    clipboardCopy(`http://localhost:3000${url}`);
+    setCopySuccess('Link copied!');
+  };
+
+  const handleFavoriteClick = () => {
+    const { meals } = foodDetails;
+    let getItem = localStorage.getItem('favoriteRecipes');
+    const array = [];
+    meals.forEach((element) => {
+      const obj = {
+        id: element.idMeal,
+        type: 'food',
+        nationality: element.strArea,
+        category: element.strCategory,
+        alcoholicOrNot: '',
+        name: element.strMeal,
+        image: element.strMealThumb,
+      };
+      if (!getItem) {
+        array.push(obj);
+        localStorage.setItem('favoriteRecipes', JSON.stringify(array));
+      } else {
+        getItem = JSON.parse(getItem);
+        localStorage.setItem('favoriteRecipes', JSON.stringify(getItem.concat(obj)));
+      }
+    });
+  };
 
   return (
     <section
@@ -67,6 +104,30 @@ function RecipeDetailsFoods({ match: { params: { id } } }) {
               height="200"
             />
             <h1 data-testid="recipe-title">{ element.strMeal }</h1>
+            <div
+              style={ {
+                display: 'flex',
+                justifyContent: 'space-around',
+              } }
+            >
+              <input
+                type="image"
+                src={ shareIcon }
+                alt="Share Button"
+                name="share-btn"
+                data-testid="share-btn"
+                onClick={ handleShareClick }
+              />
+              { copySuccess }
+              <input
+                type="image"
+                src={ whiteHeartIcon }
+                alt="Favorite Button"
+                name="favorite-btn"
+                data-testid="favorite-btn"
+                onClick={ handleFavoriteClick }
+              />
+            </div>
             <p>Recomendacoes:</p>
             <Carousel>
               {recomendations.map((recomend, position) => (
@@ -130,6 +191,7 @@ function RecipeDetailsFoods({ match: { params: { id } } }) {
           type="button"
           data-testid="start-recipe-btn"
           style={ { position: 'fixed' } }
+          onClick={ () => history.push(`/foods/${id}/in-progress`) }
         >
           Start Recipe
         </button>
@@ -140,6 +202,7 @@ function RecipeDetailsFoods({ match: { params: { id } } }) {
 
 RecipeDetailsFoods.propTypes = {
   match: PropTypes.shape({
+    url: PropTypes.string.isRequired,
     params: PropTypes.shape(
       PropTypes.string.isRequired,
     ).isRequired,
