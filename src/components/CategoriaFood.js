@@ -1,13 +1,18 @@
 import React, { useEffect, useContext } from 'react';
+import { Link } from 'react-router-dom';
 import RecipesContext from '../context/RecipesContext';
 
-export default function CatergoriaFood() {
+export default function CategoriaFood() {
   const {
+    foodData,
     categoriaFood,
     resultCategoriaFood,
     setCategoriaFood,
     setResultCategoriaFood,
-    setCategoriaRender } = useContext(RecipesContext);
+    categoriaRender,
+    setCategoriaRender,
+    setSavingId,
+  } = useContext(RecipesContext);
 
   async function fetchCategoria() {
     return fetch('https://www.themealdb.com/api/json/v1/1/list.php?c=list')
@@ -29,8 +34,17 @@ export default function CatergoriaFood() {
 
   const categoriaButton = (cur) => {
     fetchResultCategoria(cur);
-    setCategoriaRender(true);
+    setCategoriaRender(!categoriaRender);
   };
+
+  useEffect(() => {
+    const handleConditionalRender = () => {
+      if (!categoriaRender) {
+        setResultCategoriaFood(foodData);
+      }
+    };
+    handleConditionalRender();
+  });
 
   const nrDeCategorias = 5;
   const nrDeReceitas = 12;
@@ -39,7 +53,10 @@ export default function CatergoriaFood() {
       <button
         type="button"
         data-testid="All-category-filter"
-        onClick={ () => setCategoriaRender(false) }
+        onClick={ () => {
+          setResultCategoriaFood(foodData);
+          setCategoriaRender(false);
+        } }
       >
         All
 
@@ -59,18 +76,24 @@ export default function CatergoriaFood() {
       </section>
       <section>
         { resultCategoriaFood.meals
-           && resultCategoriaFood.meals.slice(0, nrDeReceitas).map((food, index) => (
-             <div key={ food.idMeal } data-testid={ `${index}-recipe-card` }>
-               <h1 data-testid={ `${index}-card-name` }>{ food.strMeal }</h1>
-               <img
-                 src={ food.strMealThumb }
-                 alt={ food.strMeal }
-                 data-testid={ `${index}-card-img` }
-                 width="50"
-                 height="50"
-               />
-             </div>
-           )) }
+          && resultCategoriaFood.meals.slice(0, nrDeReceitas).map((food, index) => (
+            <Link
+              to={ `/foods/${food.idMeal}` }
+              key={ food.idMeal }
+              onClick={ () => setSavingId(food.idMeal) }
+            >
+              <div data-testid={ `${index}-recipe-card` }>
+                <h1 data-testid={ `${index}-card-name` }>{ food.strMeal }</h1>
+                <img
+                  src={ food.strMealThumb }
+                  alt={ food.strMeal }
+                  data-testid={ `${index}-card-img` }
+                  width="50"
+                  height="50"
+                />
+              </div>
+            </Link>
+          )) }
       </section>
     </div>
   );
