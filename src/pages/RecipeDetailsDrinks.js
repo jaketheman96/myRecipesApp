@@ -4,6 +4,7 @@ import Carousel from 'react-bootstrap/Carousel';
 import { useHistory } from 'react-router-dom';
 import shareIcon from '../images/shareIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
 import RecipesContext from '../context/RecipesContext';
 
 const RECIPES = 6;
@@ -13,6 +14,8 @@ function RecipeDetailsDrinks({ match: { url, params: { id } } }) {
   const {
     setLoading,
     foodData,
+    setShowBlackButton,
+    showBlackButton,
   } = useContext(RecipesContext);
 
   const [drinkDetails, setDrinkDetails] = useState(null);
@@ -57,9 +60,22 @@ function RecipeDetailsDrinks({ match: { url, params: { id } } }) {
     setCopySuccess('Link copied!');
   };
 
+  useEffect(() => {
+    const handleConditional = () => {
+      const getStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
+      if (getStorage && getStorage.some((item) => item.id === id)) {
+        setShowBlackButton(true);
+      } else {
+        setShowBlackButton(false);
+      }
+    };
+    handleConditional();
+  }, []);
+
   const handleFavoriteClick = () => {
     const { drinks } = drinkDetails;
     let getItem = localStorage.getItem('favoriteRecipes');
+    setShowBlackButton(true);
     const array = [];
     drinks.forEach((element) => {
       const obj = {
@@ -112,7 +128,7 @@ function RecipeDetailsDrinks({ match: { url, params: { id } } }) {
               { copySuccess }
               <input
                 type="image"
-                src={ whiteHeartIcon }
+                src={ showBlackButton ? blackHeartIcon : whiteHeartIcon }
                 alt="Favorite Button"
                 name="favorite-btn"
                 data-testid="favorite-btn"

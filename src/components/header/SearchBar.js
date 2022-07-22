@@ -12,6 +12,7 @@ function SearchBar() {
     setIsSearching,
     setSavingId,
     setSearchedData,
+    resultCategoriaFood,
   } = useContext(RecipesContext);
 
   const [searchValue, setSearchValue] = useState('');
@@ -71,11 +72,11 @@ function SearchBar() {
       case 'Foods':
         if (!searchedData.meals) {
           global.alert('Sorry, we haven\'t found any recipes for these filters.');
+          setSearchedData(resultCategoriaFood);
           return 'error';
         }
         if (searchedData.meals.length === 1) {
           searchedData.meals.map(({ idMeal }) => {
-            setSavingId(idMeal);
             history.push(`/foods/${idMeal}`);
             return idMeal;
           });

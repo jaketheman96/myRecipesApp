@@ -14,6 +14,8 @@ function RecipeDetailsFoods({ match: { url, params: { id } } }) {
   const {
     setLoading,
     drinkData,
+    setShowBlackButton,
+    showBlackButton,
   } = useContext(RecipesContext);
 
   const [foodDetails, setFoodDetails] = useState(null);
@@ -68,6 +70,7 @@ function RecipeDetailsFoods({ match: { url, params: { id } } }) {
   const handleFavoriteClick = () => {
     const { meals } = foodDetails;
     let getItem = localStorage.getItem('favoriteRecipes');
+    setShowBlackButton(true);
     const array = [];
     meals.forEach((element) => {
       const obj = {
@@ -87,16 +90,19 @@ function RecipeDetailsFoods({ match: { url, params: { id } } }) {
         localStorage.setItem('favoriteRecipes', JSON.stringify(getItem.concat(obj)));
       }
     });
-    // return blackHeartIcon;
   };
 
-  const handleConditional = () => {
-    const getStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
-    if (getStorage && getStorage.some((item) => item.id === id)) {
-      return blackHeartIcon;
-    }
-    return whiteHeartIcon;
-  };
+  useEffect(() => {
+    const handleConditional = () => {
+      const getStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
+      if (getStorage && getStorage.some((item) => item.id === id)) {
+        setShowBlackButton(true);
+      } else {
+        setShowBlackButton(false);
+      }
+    };
+    handleConditional();
+  }, []);
 
   return (
     <section
@@ -130,7 +136,7 @@ function RecipeDetailsFoods({ match: { url, params: { id } } }) {
               { copySuccess }
               <input
                 type="image"
-                src={ handleConditional() }
+                src={ showBlackButton ? blackHeartIcon : whiteHeartIcon }
                 alt="Favorite Button"
                 name="favorite-btn"
                 data-testid="favorite-btn"
