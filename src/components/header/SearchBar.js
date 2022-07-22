@@ -32,7 +32,6 @@ function SearchBar() {
       break;
     default:
       break;
-      // return searchType;
     }
   };
 
@@ -50,7 +49,7 @@ function SearchBar() {
       }
       break;
     default:
-      return searchType;
+      break;
     }
   };
 
