@@ -14,8 +14,6 @@ function RecipeDetailsFoods({ match: { url, params: { id } } }) {
   const {
     setLoading,
     drinkData,
-    setShowBlackButton,
-    showBlackButton,
   } = useContext(RecipesContext);
 
   const [foodDetails, setFoodDetails] = useState(null);
@@ -23,6 +21,7 @@ function RecipeDetailsFoods({ match: { url, params: { id } } }) {
   const [urlFood, setUrlFood] = useState('');
   const [recomendations, setRecomendations] = useState(null);
   const [copySuccess, setCopySuccess] = useState('');
+  const [isFavorited, setIsFavorited] = useState(false);
 
   const history = useHistory();
 
@@ -68,12 +67,14 @@ function RecipeDetailsFoods({ match: { url, params: { id } } }) {
   };
 
   const handleFavoriteClick = () => {
+    console.log(localStorage);
     const { meals } = foodDetails;
-    let getItem = localStorage.getItem('favoriteRecipes');
-    setShowBlackButton(true);
+    let getItem = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    setIsFavorited(!isFavorited);
     const array = [];
+    let obj = {};
     meals.forEach((element) => {
-      const obj = {
+      obj = {
         id: element.idMeal,
         type: 'food',
         nationality: element.strArea,
@@ -82,23 +83,30 @@ function RecipeDetailsFoods({ match: { url, params: { id } } }) {
         name: element.strMeal,
         image: element.strMealThumb,
       };
-      if (!getItem) {
-        array.push(obj);
-        localStorage.setItem('favoriteRecipes', JSON.stringify(array));
-      } else {
-        getItem = JSON.parse(getItem);
-        localStorage.setItem('favoriteRecipes', JSON.stringify(getItem.concat(obj)));
-      }
     });
+    if (!getItem) {
+      array.push(obj);
+      localStorage.setItem('favoriteRecipes', JSON.stringify(array));
+    }
+    if (getItem) {
+      const condition = getItem.some((item) => item.id === id);
+      if (!condition) {
+        localStorage.favoriteRecipes = JSON.stringify(getItem.concat(obj));
+      }
+      if (condition) {
+        getItem = getItem.filter((itens) => itens.id !== id);
+        localStorage.favoriteRecipes = JSON.stringify(getItem);
+      }
+    }
   };
 
   useEffect(() => {
     const handleConditional = () => {
       const getStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
       if (getStorage && getStorage.some((item) => item.id === id)) {
-        setShowBlackButton(true);
+        setIsFavorited(true);
       } else {
-        setShowBlackButton(false);
+        setIsFavorited(false);
       }
     };
     handleConditional();
@@ -136,7 +144,7 @@ function RecipeDetailsFoods({ match: { url, params: { id } } }) {
               { copySuccess }
               <input
                 type="image"
-                src={ showBlackButton ? blackHeartIcon : whiteHeartIcon }
+                src={ isFavorited ? blackHeartIcon : whiteHeartIcon }
                 alt="Favorite Button"
                 name="favorite-btn"
                 data-testid="favorite-btn"

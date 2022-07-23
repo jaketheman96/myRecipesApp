@@ -14,14 +14,13 @@ function RecipeDetailsDrinks({ match: { url, params: { id } } }) {
   const {
     setLoading,
     foodData,
-    setShowBlackButton,
-    showBlackButton,
   } = useContext(RecipesContext);
 
   const [drinkDetails, setDrinkDetails] = useState(null);
   const [arrayOfNum, setArrayOfNum] = useState(null);
   const [recomendations, setRecomendations] = useState(null);
   const [copySuccess, setCopySuccess] = useState('');
+  const [isFavorited, setIsFavorited] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
@@ -64,9 +63,9 @@ function RecipeDetailsDrinks({ match: { url, params: { id } } }) {
     const handleConditional = () => {
       const getStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
       if (getStorage && getStorage.some((item) => item.id === id)) {
-        setShowBlackButton(true);
+        setIsFavorited(true);
       } else {
-        setShowBlackButton(false);
+        setIsFavorited(false);
       }
     };
     handleConditional();
@@ -74,11 +73,12 @@ function RecipeDetailsDrinks({ match: { url, params: { id } } }) {
 
   const handleFavoriteClick = () => {
     const { drinks } = drinkDetails;
-    let getItem = localStorage.getItem('favoriteRecipes');
-    setShowBlackButton(true);
+    let getItem = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    setIsFavorited(!isFavorited);
     const array = [];
+    let obj = {};
     drinks.forEach((element) => {
-      const obj = {
+      obj = {
         id: element.idDrink,
         type: 'drink',
         nationality: '',
@@ -87,14 +87,21 @@ function RecipeDetailsDrinks({ match: { url, params: { id } } }) {
         name: element.strDrink,
         image: element.strDrinkThumb,
       };
-      if (!getItem) {
-        array.push(obj);
-        localStorage.setItem('favoriteRecipes', JSON.stringify(array));
-      } else {
-        getItem = JSON.parse(getItem);
-        localStorage.setItem('favoriteRecipes', JSON.stringify(getItem.concat(obj)));
-      }
     });
+    if (!getItem) {
+      array.push(obj);
+      localStorage.setItem('favoriteRecipes', JSON.stringify(array));
+    }
+    if (getItem) {
+      const condition = getItem.some((item) => item.id === id);
+      if (!condition) {
+        localStorage.favoriteRecipes = JSON.stringify(getItem.concat(obj));
+      }
+      if (condition) {
+        getItem = getItem.filter((itens) => itens.id !== id);
+        localStorage.favoriteRecipes = JSON.stringify(getItem);
+      }
+    }
   };
 
   return (
@@ -128,7 +135,7 @@ function RecipeDetailsDrinks({ match: { url, params: { id } } }) {
               { copySuccess }
               <input
                 type="image"
-                src={ showBlackButton ? blackHeartIcon : whiteHeartIcon }
+                src={ isFavorited ? blackHeartIcon : whiteHeartIcon }
                 alt="Favorite Button"
                 name="favorite-btn"
                 data-testid="favorite-btn"

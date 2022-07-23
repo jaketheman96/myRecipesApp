@@ -20,7 +20,6 @@ function RecipesProvider({ children }) {
   const [categoriaDrink, setCategoriaDrink] = useState([]);
   const [resultCategoriaDrink, setResultCategoriaDrink] = useState([]);
   const [categoriaRender, setCategoriaRender] = useState(false);
-  const [showBlackButton, setShowBlackButton] = useState(false);
   const { pathname } = useLocation();
 
   useEffect(() => {
@@ -110,8 +109,6 @@ function RecipesProvider({ children }) {
     setCategoriaRender,
     isSearching,
     setIsSearching,
-    setShowBlackButton,
-    showBlackButton,
   };
 
   return (
