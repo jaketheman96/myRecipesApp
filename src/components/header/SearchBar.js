@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import RecipesContext from '../../context/RecipesContext';
+import styles from './styles/SearchBar.module.css';
 
 function SearchBar() {
   const {
@@ -119,7 +120,7 @@ function SearchBar() {
   };
 
   return (
-    <>
+    <section className={ styles.searchBar }>
       <label htmlFor="search-bar">
         <input
           type="text"
@@ -161,7 +162,7 @@ function SearchBar() {
       >
         Search
       </button>
-    </>
+    </section>
   );
 }
 

@@ -2,6 +2,7 @@ import React, { useEffect, useContext } from 'react';
 import RecipesContext from '../context/RecipesContext';
 import DrinkCard from './DrinkCard';
 import MainDrink from './MainDrink';
+import styles from '../styles/CategoriaDrink.module.css';
 
 export default function CategoriaDrink() {
   const {
@@ -49,8 +50,9 @@ export default function CategoriaDrink() {
 
   const nrDeCategorias = 5;
   return (
-    <div>
+    <div className={ styles.drinkPage }>
       <button
+        className={ styles.buttonAll }
         type="button"
         data-testid="All-category-filter"
         onClick={ () => {
@@ -61,9 +63,10 @@ export default function CategoriaDrink() {
         All
 
       </button>
-      <section>
+      <section className={ styles.categories }>
         {categoriaDrink.slice(0, nrDeCategorias).map((drink, index) => (
           <button
+            className={ styles.categoriesButtons }
             key={ index }
             type="button"
             data-testid={ `${drink.strCategory}-category-filter` }
@@ -77,7 +80,7 @@ export default function CategoriaDrink() {
           </button>
         ))}
       </section>
-      <section>
+      <section className={ styles.comidas }>
         {isSearching ? <DrinkCard /> : <MainDrink />}
       </section>
     </div>

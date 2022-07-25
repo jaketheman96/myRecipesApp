@@ -1,13 +1,14 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import RecipesContext from '../context/RecipesContext';
+import styles from '../styles/FoodCard.module.css';
 
 export default function FoodCard() {
   const nrDeReceitas = 12;
   const { searchedData } = useContext(RecipesContext);
 
   return (
-    <section className="foodCard">
+    <section className={ styles.foodCardPage }>
       { searchedData && (
         <div className="teste">
           { searchedData.meals

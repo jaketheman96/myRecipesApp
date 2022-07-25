@@ -3,18 +3,21 @@ import RecipesContext from '../../context/RecipesContext';
 import PageTitle from './PageTitle';
 import ProfileTopBtn from './ProfileTopBtn';
 import SearchTopBtn from './SearchTopBtn';
+import styles from './styles/Header.module.css';
 
 function Header() {
   const { pathNames } = useContext(RecipesContext);
 
   return (
-    <header>
+    <header className={ styles.header }>
       <ProfileTopBtn />
       <PageTitle />
-      {pathNames === 'Profile'
-       || pathNames === 'Done Recipes'
-       || pathNames === 'Favorite Recipes'
-        ? null : <SearchTopBtn />}
+      <div className={ styles.lupa }>
+        {pathNames === 'Profile'
+        || pathNames === 'Done Recipes'
+        || pathNames === 'Favorite Recipes'
+          ? null : <SearchTopBtn />}
+      </div>
     </header>
   );
 }
