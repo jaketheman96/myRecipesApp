@@ -10,10 +10,12 @@ import RecipesContext from '../context/RecipesContext';
 
 const RECIPES = 6;
 
+// outra forma de pegar id do url eh usar useRouteMatch...
 function RecipeDetailsFoods({ match: { url, params: { id } } }) {
   const {
     setLoading,
     drinkData,
+    setPathNames,
   } = useContext(RecipesContext);
 
   const [foodDetails, setFoodDetails] = useState(null);
@@ -24,6 +26,10 @@ function RecipeDetailsFoods({ match: { url, params: { id } } }) {
   const [isFavorited, setIsFavorited] = useState(false);
 
   const history = useHistory();
+
+  useEffect(() => {
+    setPathNames('Foods');
+  });
 
   useEffect(() => {
     const handleRecomendations = () => {
@@ -49,9 +55,9 @@ function RecipeDetailsFoods({ match: { url, params: { id } } }) {
       setLoading(true);
       fetch(urlApi)
         .then((response) => response.json())
-        .then((data) => {
-          setFoodDetails(data);
-          setUrlFood(data.meals.map(({ strYoutube }) => (
+        .then(({ meals }) => {
+          setFoodDetails(meals);
+          setUrlFood(meals.map(({ strYoutube }) => (
             strYoutube.replace('watch?v=', 'embed/')
           )));
         })
@@ -67,7 +73,6 @@ function RecipeDetailsFoods({ match: { url, params: { id } } }) {
   };
 
   const handleFavoriteClick = () => {
-    console.log(localStorage);
     const { meals } = foodDetails;
     let getItem = JSON.parse(localStorage.getItem('favoriteRecipes'));
     setIsFavorited(!isFavorited);
@@ -117,7 +122,7 @@ function RecipeDetailsFoods({ match: { url, params: { id } } }) {
       style={ { backgroundColor: 'grey' } }
     >
       {foodDetails && recomendations
-        ? foodDetails.meals.map((element, index) => (
+        ? foodDetails.map((element, index) => (
           <div key={ index }>
             <img
               src={ element.strMealThumb }

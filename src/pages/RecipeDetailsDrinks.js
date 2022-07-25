@@ -14,6 +14,7 @@ function RecipeDetailsDrinks({ match: { url, params: { id } } }) {
   const {
     setLoading,
     foodData,
+    setPathNames,
   } = useContext(RecipesContext);
 
   const [drinkDetails, setDrinkDetails] = useState(null);
@@ -22,6 +23,10 @@ function RecipeDetailsDrinks({ match: { url, params: { id } } }) {
   const [copySuccess, setCopySuccess] = useState('');
   const [isFavorited, setIsFavorited] = useState(false);
   const history = useHistory();
+
+  useEffect(() => {
+    setPathNames('Drinks');
+  });
 
   useEffect(() => {
     const array = [];
@@ -47,7 +52,7 @@ function RecipeDetailsDrinks({ match: { url, params: { id } } }) {
       setLoading(true);
       fetch(urlApi)
         .then((response) => response.json())
-        .then((data) => setDrinkDetails(data))
+        .then((data) => setDrinkDetails(data.drinks))
         .catch((error) => console.log(error));
     };
     fetchDrinkDetails();
@@ -109,7 +114,7 @@ function RecipeDetailsDrinks({ match: { url, params: { id } } }) {
       style={ { backgroundColor: 'grey' } }
     >
       {drinkDetails && recomendations
-        ? drinkDetails.drinks.map((element, index) => (
+        ? drinkDetails.map((element, index) => (
           <div key={ index }>
             <img
               src={ element.strDrinkThumb }
