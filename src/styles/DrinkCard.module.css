@@ -1,0 +1,7 @@
+.drinkCardPage {
+  align-items: center;
+  background-color: aquamarine;
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}

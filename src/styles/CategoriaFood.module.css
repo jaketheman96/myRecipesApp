@@ -1,0 +1,49 @@
+.foodPage {
+  align-items: center;
+  background-color: white;
+  border: 5px solid #fcaf20;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+}
+
+.buttonAll {
+  align-items: center;
+  background-color: #fcaf20;
+  border: 1px solid #fcaf20;
+  border-radius: 50px;
+  color: white;
+  font-weight: 600;
+  margin: 10px;
+  padding: 5px;
+  width: 100px;
+}
+
+.categories {
+  align-items: center;
+  border-radius: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.categoriesButtons {
+  align-items: center;
+  background-color: #fcaf20;
+  border: 1px solid #fcaf20;
+  border-radius: 10px;
+  color: white;
+  display: flex;
+  font-weight: 600;
+  justify-content: space-around;
+  margin: 2px;
+}
+
+.comidas {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}

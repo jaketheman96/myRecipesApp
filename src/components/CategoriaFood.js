@@ -2,6 +2,7 @@ import React, { useEffect, useContext } from 'react';
 import RecipesContext from '../context/RecipesContext';
 import FoodCard from './FoodCard';
 import MainFood from './MainFood';
+import styles from '../styles/CategoriaFood.module.css';
 
 export default function CategoriaFood() {
   const {
@@ -49,8 +50,9 @@ export default function CategoriaFood() {
 
   const nrDeCategorias = 5;
   return (
-    <div>
+    <div className={ styles.foodPage }>
       <button
+        className={ styles.buttonAll }
         type="button"
         data-testid="All-category-filter"
         onClick={ () => {
@@ -61,9 +63,10 @@ export default function CategoriaFood() {
         All
 
       </button>
-      <section>
+      <section className={ styles.categories }>
         {categoriaFood.slice(0, nrDeCategorias).map((meal, index) => (
           <button
+            className={ styles.categoriesButtons }
             key={ index }
             type="button"
             data-testid={ `${meal.strCategory}-category-filter` }
@@ -77,7 +80,9 @@ export default function CategoriaFood() {
           </button>
         ))}
       </section>
-      {isSearching ? <FoodCard /> : <MainFood />}
+      <section className={ styles.comidas }>
+        {isSearching ? <FoodCard /> : <MainFood />}
+      </section>
     </div>
   );
 }
