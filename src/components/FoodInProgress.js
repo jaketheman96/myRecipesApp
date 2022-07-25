@@ -12,19 +12,22 @@ function FoodInProgress() {
   const [foodDetails, setFoodDetails] = useState(null);
   const [copySuccess, setCopySuccess] = useState('');
   const [isFavorited, setIsFavorited] = useState(false);
-  const [arrayOfNum, setArrayOfNum] = useState([]);
   const [filteredDetails, setFilteredDetails] = useState(null);
+  // const [ingredients, setIngredients] = useState(null);
 
   const { url, params: { id } } = useRouteMatch();
 
-  useEffect(() => {
-    const array = [];
-    const size = 15;
-    for (let i = 1; i <= size; i += 1) {
-      array.push(i);
-    }
-    setArrayOfNum(array);
-  }, []);
+  // useEffect(() => {
+  //   const handleConcat = () => {
+  //     if (filteredDetails) {
+  //       setIngredients(filteredDetails
+  //         .map((element) => Object.keys(element)
+  //           .filter((key) => key.includes('strIngredient')
+  //           || key.includes('strMeasure'))));
+  //     }
+  //   };
+  //   handleConcat();
+  // }, [filteredDetails]);
 
   useEffect(() => {
     const handleNullKeys = () => {
@@ -38,8 +41,6 @@ function FoodInProgress() {
           return element;
         });
         setFilteredDetails(filtered);
-        const entries = Object.entries(filtered);
-        console.log(Object.fromEntries(entries));
       }
     };
     handleNullKeys();
@@ -146,18 +147,13 @@ function FoodInProgress() {
               onClick={ handleFavoriteClick }
             />
           </div>
-          {/* <p>{Object.entries(food)}</p> */}
+          {Object.keys(food).map((key, p) => (
+            key.includes('strIngredient')
+              && <li key={ p } data-testid={ `${p}-ingredient-step` }>{food[key]}</li>
+          ))}
           <p data-testid="instructions">
             { `Instructions: ${food.strInstructions}` }
           </p>
-          {/* { arrayOfNum && arrayOfNum.map((number, position) => (
-            <li
-              key={ number }
-              data-testid={ `${position}-ingredient-step` }
-            >
-              { `${food[`strIngredient${number}`]} ${food[`strMeasure${number}`]}` }
-            </li>
-          ))} */}
           <button
             type="button"
             data-testid="finish-recipe-btn"

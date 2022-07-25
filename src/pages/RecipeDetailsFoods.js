@@ -1,22 +1,23 @@
 import React, { useContext, useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import Carousel from 'react-bootstrap/Carousel';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import clipboardCopy from 'clipboard-copy';
 import shareIcon from '../images/shareIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import RecipesContext from '../context/RecipesContext';
+import styles from '../styles/RecipeDetailsFoods.module.css';
 
 const RECIPES = 6;
 
-// outra forma de pegar id do url eh usar useRouteMatch...
-function RecipeDetailsFoods({ match: { url, params: { id } } }) {
+function RecipeDetailsFoods() {
   const {
     setLoading,
     drinkData,
     setPathNames,
   } = useContext(RecipesContext);
+
+  const { url, params: { id } } = useRouteMatch();
 
   const [foodDetails, setFoodDetails] = useState(null);
   const [arrayOfNum, setArrayOfNum] = useState([]);
@@ -73,12 +74,11 @@ function RecipeDetailsFoods({ match: { url, params: { id } } }) {
   };
 
   const handleFavoriteClick = () => {
-    const { meals } = foodDetails;
     let getItem = JSON.parse(localStorage.getItem('favoriteRecipes'));
     setIsFavorited(!isFavorited);
     const array = [];
     let obj = {};
-    meals.forEach((element) => {
+    foodDetails.forEach((element) => {
       obj = {
         id: element.idMeal,
         type: 'food',
@@ -119,25 +119,18 @@ function RecipeDetailsFoods({ match: { url, params: { id } } }) {
 
   return (
     <section
-      style={ { backgroundColor: 'grey' } }
+      className={ styles.recipesPage }
     >
       {foodDetails && recomendations
         ? foodDetails.map((element, index) => (
-          <div key={ index }>
+          <div key={ index } className={ styles.recipesPageDrink }>
             <img
               src={ element.strMealThumb }
               alt={ element.strMeal }
               data-testid="recipe-photo"
-              width="200"
-              height="200"
+              className={ styles.recipesPageDrinkImg }
             />
-            <h1 data-testid="recipe-title">{ element.strMeal }</h1>
-            <div
-              style={ {
-                display: 'flex',
-                justifyContent: 'space-around',
-              } }
-            >
+            <div className={ styles.recipesPageDrinkDiv }>
               <input
                 type="image"
                 src={ shareIcon }
@@ -156,27 +149,32 @@ function RecipeDetailsFoods({ match: { url, params: { id } } }) {
                 onClick={ handleFavoriteClick }
               />
             </div>
-            <p>Recomendacoes:</p>
+            <h1
+              data-testid="recipe-title"
+              className={ styles.recipesPageDrinkName }
+            >
+              { element.strMeal }
+            </h1>
             <Carousel>
+              <p className={ styles.recomendation }>Recomendacoes:</p>
               {recomendations.map((recomend, position) => (
                 <Carousel.Item
                   key={ position }
                   data-testid={ `${position}-recomendation-card` }
+                  className={ styles.carousel }
                 >
                   <img
                     src={ recomend.strDrinkThumb }
                     alt={ recomend.strDrink }
                     width="100"
                   />
-                  <h1
-                    data-testid={ `${position}-recomendation-title` }
-                  >
+                  <h1 data-testid={ `${position}-recomendation-title` }>
                     { recomend.strDrink }
                   </h1>
                 </Carousel.Item>
               ))}
             </Carousel>
-            <div>
+            <div className={ styles.ingredients }>
               <iframe
                 width="300"
                 height="200"
@@ -185,36 +183,42 @@ function RecipeDetailsFoods({ match: { url, params: { id } } }) {
                 data-testid="video"
                 frameBorder="0"
                 allowFullScreen
+                className={ styles.video }
               />
             </div>
-            <p data-testid="recipe-category">{ `Categoria: ${element.strCategory}` }</p>
-            <p data-testid="instructions">
-              { `Instructions: ${element.strInstructions}` }
-            </p>
-            <ul>
-              { arrayOfNum && arrayOfNum.map((number, position) => (
-                <li
-                  key={ number }
-                  data-testid={ `${position}-ingredient-name-and-measure` }
-                >
-                  <p>
-                    { `${element[`strIngredient${number}`]} 
-                      ${element[`strMeasure${number}`]}` }
-                  </p>
-                </li>
-              ))}
-            </ul>
+            <div className={ styles.categorias }>
+              <p data-testid="recipe-category" className={ styles.categoria }>
+                { `Categoria: ${element.strCategory}` }
+              </p>
+              <p data-testid="instructions" className={ styles.categoria }>
+                { `Instructions: ${element.strInstructions}` }
+              </p>
+              <ul>
+                { arrayOfNum && arrayOfNum.map((number, position) => (
+                  <li
+                    key={ number }
+                    data-testid={ `${position}-ingredient-name-and-measure` }
+                  >
+                    <p>
+                      { `${element[`strIngredient${number}`]} 
+                        ${element[`strMeasure${number}`]}` }
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         ))
         : <p>Loading...</p>}
       <footer>
-        <button type="button">
+        <button type="button" className={ styles.footerButton1 }>
           <a href="/foods">
             <i className="fas fa-arrow-left" />
             Back to recipes
           </a>
         </button>
         <button
+          className={ styles.footerButton1 }
           id="start-recipe-btn"
           type="button"
           data-testid="start-recipe-btn"
@@ -227,14 +231,5 @@ function RecipeDetailsFoods({ match: { url, params: { id } } }) {
     </section>
   );
 }
-
-RecipeDetailsFoods.propTypes = {
-  match: PropTypes.shape({
-    url: PropTypes.string.isRequired,
-    params: PropTypes.shape(
-      PropTypes.string.isRequired,
-    ).isRequired,
-  }).isRequired,
-};
 
 export default RecipeDetailsFoods;

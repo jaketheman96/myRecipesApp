@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import RecipesContext from '../../context/RecipesContext';
+import styles from './styles/SearchBar.module.css';
 
 function SearchBar() {
   const {
@@ -118,8 +119,8 @@ function SearchBar() {
   };
 
   return (
-    <>
-      <label htmlFor="search-bar">
+    <section className={ styles.searchBar }>
+      <label htmlFor="search-bar" className={ styles.inputLabel }>
         <input
           type="text"
           name="search-bar"
@@ -127,40 +128,47 @@ function SearchBar() {
           data-testid="search-input"
           placeholder="Digite sua pesquisa"
           onChange={ (e) => setSearchValue(e.target.value) }
+          className={ styles.inputSearch }
         />
       </label>
-      <input
-        type="radio"
-        value="ingredient"
-        name="search"
-        data-testid="ingredient-search-radio"
-        onChange={ handleChange }
-      />
-      Ingredient
-      <input
-        type="radio"
-        value="name"
-        name="search"
-        data-testid="name-search-radio"
-        onChange={ handleChange }
-      />
-      Name
-      <input
-        type="radio"
-        value="first-letter"
-        name="search"
-        data-testid="first-letter-search-radio"
-        onChange={ handleChange }
-      />
-      First Letter
+      <section className={ styles.inputs }>
+        <input
+          type="radio"
+          value="ingredient"
+          name="search"
+          data-testid="ingredient-search-radio"
+          onChange={ handleChange }
+          className={ styles.input }
+        />
+        Ingredient
+        <input
+          type="radio"
+          value="name"
+          name="search"
+          data-testid="name-search-radio"
+          onChange={ handleChange }
+          className={ styles.input }
+        />
+        Name
+        <input
+          type="radio"
+          value="first-letter"
+          name="search"
+          data-testid="first-letter-search-radio"
+          onChange={ handleChange }
+          className={ styles.input }
+        />
+        First Letter
+      </section>
       <button
         type="button"
         onClick={ fetchApiWhenClicked }
         data-testid="exec-search-btn"
+        className={ styles.searchBarBtn }
       >
         Search
       </button>
-    </>
+    </section>
   );
 }
 
