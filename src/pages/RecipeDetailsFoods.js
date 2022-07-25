@@ -67,6 +67,23 @@ function RecipeDetailsFoods({ match: { params: { id } } }) {
               height="200"
             />
             <h1 data-testid="recipe-title">{ element.strMeal }</h1>
+            <button
+              type="button"
+              data-testid="favorite-btn"
+              onClick={ () => {
+                localStorage.setItem('favoriteRecipes', JSON.stringify({
+                  id: element.idMeal,
+                  type: 'food',
+                  nationality: element.strArea,
+                  category: element.strCategory,
+                  alcoholicOrNot: '',
+                  name: element.strMeal,
+                  image: element.strMealThumb,
+                }));
+              } }
+            >
+              {`Favoritar ${element.strMeal}`}
+            </button>
             <p>Recomendacoes:</p>
             <Carousel>
               {recomendations.map((recomend, position) => (
