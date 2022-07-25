@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import RecipesContext from '../../context/RecipesContext';
 import styles from './styles/SearchBar.module.css';
 
@@ -8,7 +8,6 @@ function SearchBar() {
     searchType,
     setSearchType,
     setLoading,
-    pathNames,
     searchedData,
     setIsSearching,
     setSavingId,
@@ -18,6 +17,8 @@ function SearchBar() {
 
   const [searchValue, setSearchValue] = useState('');
   const history = useHistory();
+
+  const { path } = useRouteMatch();
 
   const handleFoodFetch = () => {
     switch (searchType) {
@@ -56,10 +57,10 @@ function SearchBar() {
   };
 
   const handleToggleFetch = (param) => {
-    if (param === 'Foods') {
+    if (param === '/foods') {
       return handleFoodFetch();
     }
-    if (param === 'Drinks') {
+    if (param === '/drinks') {
       return handleDrinkFetch();
     }
   };
@@ -69,8 +70,8 @@ function SearchBar() {
       return null;
     }
     const handleIsDrinkOrFood = () => {
-      switch (pathNames) {
-      case 'Foods':
+      switch (path) {
+      case '/foods':
         if (!searchedData.meals) {
           global.alert('Sorry, we haven\'t found any recipes for these filters.');
           setSearchedData(resultCategoriaFood);
@@ -83,7 +84,7 @@ function SearchBar() {
           });
         }
         break;
-      case 'Drinks':
+      case '/drinks':
         if (!searchedData.drinks) {
           global.alert('Sorry, we haven\'t found any recipes for these filters.');
           return 'error';
@@ -105,11 +106,9 @@ function SearchBar() {
   const fetchApiWhenClicked = async () => {
     setLoading(true);
     setIsSearching(true);
-    await fetch(handleToggleFetch(pathNames))
+    await fetch(handleToggleFetch(path))
       .then((response) => response.json())
-      .then((element) => {
-        setSearchedData(element);
-      })
+      .then((element) => setSearchedData(element))
       .catch((error) => console.log(error));
     setLoading(false);
   };

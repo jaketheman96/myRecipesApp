@@ -14,13 +14,12 @@ function RecipesProvider({ children }) {
   const [foodData, setFoodData] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [drinkData, setDrinkData] = useState([]);
-  const [pathNames, setPathNames] = useState('');
+  const [pathNames, setPathNames] = useState(null);
   const [categoriaFood, setCategoriaFood] = useState([]);
   const [resultCategoriaFood, setResultCategoriaFood] = useState([]);
   const [categoriaDrink, setCategoriaDrink] = useState([]);
   const [resultCategoriaDrink, setResultCategoriaDrink] = useState([]);
   const [categoriaRender, setCategoriaRender] = useState(false);
-  const [showBlackButton, setShowBlackButton] = useState(false);
   const { pathname } = useLocation();
 
   useEffect(() => {
@@ -110,8 +109,6 @@ function RecipesProvider({ children }) {
     setCategoriaRender,
     isSearching,
     setIsSearching,
-    setShowBlackButton,
-    showBlackButton,
   };
 
   return (

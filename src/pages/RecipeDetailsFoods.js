@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import Carousel from 'react-bootstrap/Carousel';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import clipboardCopy from 'clipboard-copy';
 import shareIcon from '../images/shareIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
@@ -11,21 +10,27 @@ import styles from '../styles/RecipeDetailsFoods.module.css';
 
 const RECIPES = 6;
 
-function RecipeDetailsFoods({ match: { url, params: { id } } }) {
+function RecipeDetailsFoods() {
   const {
     setLoading,
     drinkData,
-    setShowBlackButton,
-    showBlackButton,
+    setPathNames,
   } = useContext(RecipesContext);
+
+  const { url, params: { id } } = useRouteMatch();
 
   const [foodDetails, setFoodDetails] = useState(null);
   const [arrayOfNum, setArrayOfNum] = useState([]);
   const [urlFood, setUrlFood] = useState('');
   const [recomendations, setRecomendations] = useState(null);
   const [copySuccess, setCopySuccess] = useState('');
+  const [isFavorited, setIsFavorited] = useState(false);
 
   const history = useHistory();
+
+  useEffect(() => {
+    setPathNames('Foods');
+  });
 
   useEffect(() => {
     const handleRecomendations = () => {
@@ -51,9 +56,9 @@ function RecipeDetailsFoods({ match: { url, params: { id } } }) {
       setLoading(true);
       fetch(urlApi)
         .then((response) => response.json())
-        .then((data) => {
-          setFoodDetails(data);
-          setUrlFood(data.meals.map(({ strYoutube }) => (
+        .then(({ meals }) => {
+          setFoodDetails(meals);
+          setUrlFood(meals.map(({ strYoutube }) => (
             strYoutube.replace('watch?v=', 'embed/')
           )));
         })
@@ -69,12 +74,12 @@ function RecipeDetailsFoods({ match: { url, params: { id } } }) {
   };
 
   const handleFavoriteClick = () => {
-    const { meals } = foodDetails;
-    let getItem = localStorage.getItem('favoriteRecipes');
-    setShowBlackButton(true);
+    let getItem = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    setIsFavorited(!isFavorited);
     const array = [];
-    meals.forEach((element) => {
-      const obj = {
+    let obj = {};
+    foodDetails.forEach((element) => {
+      obj = {
         id: element.idMeal,
         type: 'food',
         nationality: element.strArea,
@@ -83,23 +88,30 @@ function RecipeDetailsFoods({ match: { url, params: { id } } }) {
         name: element.strMeal,
         image: element.strMealThumb,
       };
-      if (!getItem) {
-        array.push(obj);
-        localStorage.setItem('favoriteRecipes', JSON.stringify(array));
-      } else {
-        getItem = JSON.parse(getItem);
-        localStorage.setItem('favoriteRecipes', JSON.stringify(getItem.concat(obj)));
-      }
     });
+    if (!getItem) {
+      array.push(obj);
+      localStorage.setItem('favoriteRecipes', JSON.stringify(array));
+    }
+    if (getItem) {
+      const condition = getItem.some((item) => item.id === id);
+      if (!condition) {
+        localStorage.favoriteRecipes = JSON.stringify(getItem.concat(obj));
+      }
+      if (condition) {
+        getItem = getItem.filter((itens) => itens.id !== id);
+        localStorage.favoriteRecipes = JSON.stringify(getItem);
+      }
+    }
   };
 
   useEffect(() => {
     const handleConditional = () => {
       const getStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
       if (getStorage && getStorage.some((item) => item.id === id)) {
-        setShowBlackButton(true);
+        setIsFavorited(true);
       } else {
-        setShowBlackButton(false);
+        setIsFavorited(false);
       }
     };
     handleConditional();
@@ -110,7 +122,7 @@ function RecipeDetailsFoods({ match: { url, params: { id } } }) {
       className={ styles.recipesPage }
     >
       {foodDetails && recomendations
-        ? foodDetails.meals.map((element, index) => (
+        ? foodDetails.map((element, index) => (
           <div key={ index } className={ styles.recipesPageDrink }>
             <img
               src={ element.strMealThumb }
@@ -118,37 +130,31 @@ function RecipeDetailsFoods({ match: { url, params: { id } } }) {
               data-testid="recipe-photo"
               className={ styles.recipesPageDrinkImg }
             />
-            <div
-              className={ styles.recipesPageDrinkDiv }
-            >
-              <h1
-                data-testid="recipe-title"
-                className={ styles.recipesPageDrinkName }
-              >
-                { element.strMeal }
-              </h1>
-              <div className={ styles.recipesPageDrinkDiv2 }>
-                <input
-                  type="image"
-                  src={ shareIcon }
-                  alt="Share Button"
-                  name="share-btn"
-                  data-testid="share-btn"
-                  onClick={ handleShareClick }
-                  className={ styles.input1 }
-                />
-                { copySuccess }
-                <input
-                  type="image"
-                  src={ showBlackButton ? blackHeartIcon : whiteHeartIcon }
-                  alt="Favorite Button"
-                  name="favorite-btn"
-                  data-testid="favorite-btn"
-                  onClick={ handleFavoriteClick }
-                  className={ styles.input2 }
-                />
-              </div>
+            <div className={ styles.recipesPageDrinkDiv }>
+              <input
+                type="image"
+                src={ shareIcon }
+                alt="Share Button"
+                name="share-btn"
+                data-testid="share-btn"
+                onClick={ handleShareClick }
+              />
+              { copySuccess }
+              <input
+                type="image"
+                src={ isFavorited ? blackHeartIcon : whiteHeartIcon }
+                alt="Favorite Button"
+                name="favorite-btn"
+                data-testid="favorite-btn"
+                onClick={ handleFavoriteClick }
+              />
             </div>
+            <h1
+              data-testid="recipe-title"
+              className={ styles.recipesPageDrinkName }
+            >
+              { element.strMeal }
+            </h1>
             <Carousel>
               <p className={ styles.recomendation }>Recomendacoes:</p>
               {recomendations.map((recomend, position) => (
@@ -162,9 +168,7 @@ function RecipeDetailsFoods({ match: { url, params: { id } } }) {
                     alt={ recomend.strDrink }
                     width="100"
                   />
-                  <h1
-                    data-testid={ `${position}-recomendation-title` }
-                  >
+                  <h1 data-testid={ `${position}-recomendation-title` }>
                     { recomend.strDrink }
                   </h1>
                 </Carousel.Item>
@@ -183,16 +187,10 @@ function RecipeDetailsFoods({ match: { url, params: { id } } }) {
               />
             </div>
             <div className={ styles.categorias }>
-              <p
-                data-testid="recipe-category"
-                className={ styles.categoria }
-              >
+              <p data-testid="recipe-category" className={ styles.categoria }>
                 { `Categoria: ${element.strCategory}` }
               </p>
-              <p
-                data-testid="instructions"
-                className={ styles.categoria }
-              >
+              <p data-testid="instructions" className={ styles.categoria }>
                 { `Instructions: ${element.strInstructions}` }
               </p>
               <ul>
@@ -233,14 +231,5 @@ function RecipeDetailsFoods({ match: { url, params: { id } } }) {
     </section>
   );
 }
-
-RecipeDetailsFoods.propTypes = {
-  match: PropTypes.shape({
-    url: PropTypes.string.isRequired,
-    params: PropTypes.shape(
-      PropTypes.string.isRequired,
-    ).isRequired,
-  }).isRequired,
-};
 
 export default RecipeDetailsFoods;

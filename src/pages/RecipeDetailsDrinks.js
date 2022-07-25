@@ -15,15 +15,19 @@ function RecipeDetailsDrinks({ match: { url, params: { id } } }) {
   const {
     setLoading,
     foodData,
-    setShowBlackButton,
-    showBlackButton,
+    setPathNames,
   } = useContext(RecipesContext);
 
   const [drinkDetails, setDrinkDetails] = useState(null);
   const [arrayOfNum, setArrayOfNum] = useState(null);
   const [recomendations, setRecomendations] = useState(null);
   const [copySuccess, setCopySuccess] = useState('');
+  const [isFavorited, setIsFavorited] = useState(false);
   const history = useHistory();
+
+  useEffect(() => {
+    setPathNames('Drinks');
+  });
 
   useEffect(() => {
     const array = [];
@@ -49,7 +53,7 @@ function RecipeDetailsDrinks({ match: { url, params: { id } } }) {
       setLoading(true);
       fetch(urlApi)
         .then((response) => response.json())
-        .then((data) => setDrinkDetails(data))
+        .then((data) => setDrinkDetails(data.drinks))
         .catch((error) => console.log(error));
     };
     fetchDrinkDetails();
@@ -65,21 +69,21 @@ function RecipeDetailsDrinks({ match: { url, params: { id } } }) {
     const handleConditional = () => {
       const getStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
       if (getStorage && getStorage.some((item) => item.id === id)) {
-        setShowBlackButton(true);
+        setIsFavorited(true);
       } else {
-        setShowBlackButton(false);
+        setIsFavorited(false);
       }
     };
     handleConditional();
   }, []);
 
   const handleFavoriteClick = () => {
-    const { drinks } = drinkDetails;
-    let getItem = localStorage.getItem('favoriteRecipes');
-    setShowBlackButton(true);
+    let getItem = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    setIsFavorited(!isFavorited);
     const array = [];
-    drinks.forEach((element) => {
-      const obj = {
+    let obj = {};
+    drinkDetails.forEach((element) => {
+      obj = {
         id: element.idDrink,
         type: 'drink',
         nationality: '',
@@ -88,22 +92,27 @@ function RecipeDetailsDrinks({ match: { url, params: { id } } }) {
         name: element.strDrink,
         image: element.strDrinkThumb,
       };
-      if (!getItem) {
-        array.push(obj);
-        localStorage.setItem('favoriteRecipes', JSON.stringify(array));
-      } else {
-        getItem = JSON.parse(getItem);
-        localStorage.setItem('favoriteRecipes', JSON.stringify(getItem.concat(obj)));
-      }
     });
+    if (!getItem) {
+      array.push(obj);
+      localStorage.setItem('favoriteRecipes', JSON.stringify(array));
+    }
+    if (getItem) {
+      const condition = getItem.some((item) => item.id === id);
+      if (!condition) {
+        localStorage.favoriteRecipes = JSON.stringify(getItem.concat(obj));
+      }
+      if (condition) {
+        getItem = getItem.filter((itens) => itens.id !== id);
+        localStorage.favoriteRecipes = JSON.stringify(getItem);
+      }
+    }
   };
 
   return (
-    <section
-      className={ styles.recipesPage }
-    >
+    <section className={ styles.recipesPage }>
       {drinkDetails && recomendations
-        ? drinkDetails.drinks.map((element, index) => (
+        ? drinkDetails.map((element, index) => (
           <div key={ index } className={ styles.recipesPageDrink }>
             <img
               src={ element.strDrinkThumb }
@@ -111,37 +120,31 @@ function RecipeDetailsDrinks({ match: { url, params: { id } } }) {
               data-testid="recipe-photo"
               className={ styles.recipesPageDrinkImg }
             />
-            <div
-              className={ styles.recipesPageDrinkDiv }
-            >
-              <h1
-                data-testid="recipe-title"
-                className={ styles.recipesPageDrinkName }
-              >
-                {element.strDrink}
-              </h1>
-              <div className={ styles.recipesPageDrinkDiv2 }>
-                <input
-                  type="image"
-                  src={ shareIcon }
-                  alt="Share Button"
-                  name="share-btn"
-                  data-testid="share-btn"
-                  onClick={ handleShareClick }
-                  className={ styles.input1 }
-                />
-                { copySuccess }
-                <input
-                  type="image"
-                  src={ showBlackButton ? blackHeartIcon : whiteHeartIcon }
-                  alt="Favorite Button"
-                  name="favorite-btn"
-                  data-testid="favorite-btn"
-                  onClick={ handleFavoriteClick }
-                  className={ styles.input2 }
-                />
-              </div>
+            <div className={ styles.recipesPageDrinkDiv }>
+              <input
+                type="image"
+                src={ shareIcon }
+                alt="Share Button"
+                name="share-btn"
+                data-testid="share-btn"
+                onClick={ handleShareClick }
+              />
+              { copySuccess }
+              <input
+                type="image"
+                src={ isFavorited ? blackHeartIcon : whiteHeartIcon }
+                alt="Favorite Button"
+                name="favorite-btn"
+                data-testid="favorite-btn"
+                onClick={ handleFavoriteClick }
+              />
             </div>
+            <h1
+              data-testid="recipe-title"
+              className={ styles.recipesPageDrinkName }
+            >
+              {element.strDrink}
+            </h1>
             <Carousel>
               <p className={ styles.recomendation }>Recomendacoes:</p>
               {recomendations.map((recomend, position) => (
@@ -155,9 +158,7 @@ function RecipeDetailsDrinks({ match: { url, params: { id } } }) {
                     alt={ recomend.strMeal }
                     width="100"
                   />
-                  <h1
-                    data-testid={ `${position}-recomendation-title` }
-                  >
+                  <h1 data-testid={ `${position}-recomendation-title` }>
                     { recomend.strMeal }
                   </h1>
                 </Carousel.Item>
@@ -170,10 +171,7 @@ function RecipeDetailsDrinks({ match: { url, params: { id } } }) {
               >
                 {element.strAlcoholic}
               </h3>
-              <p
-                data-testid="instructions"
-                className={ styles.ingredientsName2 }
-              >
+              <p data-testid="instructions" className={ styles.ingredientsName2 }>
                 {element.strInstructions}
               </p>
               <ul>
