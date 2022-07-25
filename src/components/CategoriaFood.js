@@ -1,17 +1,19 @@
 import React, { useEffect, useContext } from 'react';
-import { Link } from 'react-router-dom';
 import RecipesContext from '../context/RecipesContext';
+import FoodCard from './FoodCard';
+import MainFood from './MainFood';
+import styles from '../styles/CategoriaFood.module.css';
 
 export default function CategoriaFood() {
   const {
     foodData,
     categoriaFood,
-    resultCategoriaFood,
+    setIsSearching,
     setCategoriaFood,
     setResultCategoriaFood,
     categoriaRender,
     setCategoriaRender,
-    setSavingId,
+    isSearching,
   } = useContext(RecipesContext);
 
   async function fetchCategoria() {
@@ -47,10 +49,10 @@ export default function CategoriaFood() {
   });
 
   const nrDeCategorias = 5;
-  const nrDeReceitas = 12;
   return (
-    <div>
+    <div className={ styles.foodPage }>
       <button
+        className={ styles.buttonAll }
         type="button"
         data-testid="All-category-filter"
         onClick={ () => {
@@ -61,39 +63,25 @@ export default function CategoriaFood() {
         All
 
       </button>
-      <section>
+      <section className={ styles.categories }>
         {categoriaFood.slice(0, nrDeCategorias).map((meal, index) => (
           <button
+            className={ styles.categoriesButtons }
             key={ index }
             type="button"
             data-testid={ `${meal.strCategory}-category-filter` }
-            onClick={ () => { categoriaButton(meal.strCategory); } }
+            onClick={ () => {
+              categoriaButton(meal.strCategory);
+              setIsSearching(false);
+            } }
           >
             {meal.strCategory}
 
           </button>
         ))}
       </section>
-      <section>
-        { resultCategoriaFood.meals
-          && resultCategoriaFood.meals.slice(0, nrDeReceitas).map((food, index) => (
-            <Link
-              to={ `/foods/${food.idMeal}` }
-              key={ food.idMeal }
-              onClick={ () => setSavingId(food.idMeal) }
-            >
-              <div data-testid={ `${index}-recipe-card` }>
-                <h1 data-testid={ `${index}-card-name` }>{ food.strMeal }</h1>
-                <img
-                  src={ food.strMealThumb }
-                  alt={ food.strMeal }
-                  data-testid={ `${index}-card-img` }
-                  width="50"
-                  height="50"
-                />
-              </div>
-            </Link>
-          )) }
+      <section className={ styles.comidas }>
+        {isSearching ? <FoodCard /> : <MainFood />}
       </section>
     </div>
   );

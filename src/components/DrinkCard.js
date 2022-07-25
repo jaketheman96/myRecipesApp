@@ -1,22 +1,21 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import RecipesContext from '../context/RecipesContext';
-import MainDrink from './MainDrink';
+import styles from '../styles/DrinkCard.module.css';
 
 export default function DrinkCard() {
   const nrDeReceitas = 12;
-  const { searchedData, setSavingId } = useContext(RecipesContext);
+  const { searchedData } = useContext(RecipesContext);
 
   return (
-    <section>
+    <section className={ styles.drinkCardPage }>
       { searchedData && (
         <div>
           { searchedData.drinks
-            ? searchedData.drinks.slice(0, nrDeReceitas).map((element, index) => (
+            && searchedData.drinks.slice(0, nrDeReceitas).map((element, index) => (
               <Link
                 to={ `/drinks/${element.idDrink}` }
                 key={ element.idDrink }
-                onClick={ () => setSavingId(element.idDrink) }
               >
                 <div key={ element.idDrink } data-testid={ `${index}-recipe-card` }>
                   <h1 data-testid={ `${index}-card-name` }>{ element.strDrink }</h1>
@@ -29,7 +28,7 @@ export default function DrinkCard() {
                   />
                 </div>
               </Link>
-            )) : <MainDrink /> }
+            )) }
         </div>
       ) }
     </section>

@@ -1,0 +1,35 @@
+.foodCardPage {
+  align-items: center;
+  background-color: #fdf0d7;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+}
+
+.foodCard {
+  align-items: center;
+  background-color: #fcaf20;
+  border: 6px solid #fcaf20;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  height: 140px;
+  justify-content: center;
+  margin: 10px;
+  padding: 10px;
+  width: 120px;
+}
+
+.foodCardName {
+  color: white;
+  font-size: 20px;
+  font-weight: 600;
+
+}
+
+.foodCardimg {
+  border-radius: 10px;
+  height: 80px;
+  width: 100px;
+}

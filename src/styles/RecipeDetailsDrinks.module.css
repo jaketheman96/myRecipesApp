@@ -1,0 +1,93 @@
+.recipesPage {
+  align-items: center;
+  display: flex;
+
+}
+
+.recipesPageDrink {
+  align-items: flex-start;
+  background-color: #ffe9bf;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.recipesPageDrinkImg {
+  border: 5px solid #fcaf20;
+  border-radius: 10px;
+  height: 250px;
+  width: 100%;
+}
+
+.recipesPageDrinkDiv {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.recipesPageDrinkDiv2 {
+  align-items: center;
+  display: flex;
+  margin: 10px;
+}
+
+.recipesPageDrinkName {
+  align-items: center;
+  color: black;
+  font-weight: 600;
+  margin: 10px;
+}
+
+.input1 {
+  margin-right: 5px;
+}
+
+.input2 {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.recomendation {
+  font-weight: 800;
+  margin-left: 10px;
+}
+
+.carousel {
+  margin-left: 10px;
+  width: 90%;
+}
+
+.ingredients {
+  align-items: flex-start;
+  background-color: #f7f2c5;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin: 10px;
+  margin-top: 10px;
+}
+
+.ingredientsName {
+  font-weight: 600;
+  margin: 10px;
+  margin-top: 15px;
+}
+
+.ingredientsName2 {
+  font-weight: 600;
+  margin: 10px;
+  margin-bottom: 10px;
+  margin-top: 1px;
+}
+
+.footerButton1 {
+  background-color: #ffe9bf;
+  border: 3px solid #fcaf20;
+  border-radius: 50px;
+  color: black;
+  font-weight: 800;
+  margin: 5px;
+  padding: 5px 10px;
+}

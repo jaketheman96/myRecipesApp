@@ -4,12 +4,12 @@ import { createBrowserHistory } from 'history';
 import { render } from '@testing-library/react';
 import App from '../../App';
 
-export default function renderWithRoute (component, path) {
+export default function renderWithRoute (path) {
   const history = createBrowserHistory();
   history.push(path);
   const { ...resources } = render(
     <Router history={ history }>
-      {component}
+      <App />
     </Router>,
   );
   return { ...resources, history };
