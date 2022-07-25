@@ -13,21 +13,8 @@ function DrinkInProgress() {
   const [copySuccess, setCopySuccess] = useState('');
   const [isFavorited, setIsFavorited] = useState(false);
   const [filteredDetails, setFilteredDetails] = useState(null);
-  // const [ingredients, setIngredients] = useState(null);
 
   const { url, params: { id } } = useRouteMatch();
-
-  // useEffect(() => {
-  //   const handleConcat = () => {
-  //     if (filteredDetails) {
-  //       setIngredients(filteredDetails
-  //         .map((element) => Object.keys(element)
-  //           .filter((key) => key.includes('strIngredient')
-  //           || key.includes('strMeasure'))));
-  //     }
-  //   };
-  //   handleConcat();
-  // }, [filteredDetails]);
 
   useEffect(() => {
     const handleNullKeys = () => {
@@ -150,12 +137,27 @@ function DrinkInProgress() {
           <p data-testid="instructions">
             { `Instructions: ${drink.strInstructions}` }
           </p>
-          <p>
-            {Object.keys(drink).map((key, p) => (
-              key.includes('strIngredient')
-              && <li key={ p } data-testid={ `${p}-ingredient-step` }>{drink[key]}</li>
-            ))}
-          </p>
+          {Object.keys(drink).map((key, position) => {
+            if (key.includes('strIngredient')) {
+              return (
+                <div
+                  style={ { display: 'flex', flexDirection: 'column' } }
+                  key={ position }
+                  data-testid={ `${position}-ingredient-step` }
+                >
+                  <label htmlFor={ `ingredient${position}` }>
+                    <input
+                      type="checkbox"
+                      id={ `ingredient${position}` }
+                      key={ position }
+                    />
+                    {drink[key]}
+                  </label>
+                </div>
+              );
+            }
+            return null;
+          })}
           <button
             type="button"
             data-testid="finish-recipe-btn"
