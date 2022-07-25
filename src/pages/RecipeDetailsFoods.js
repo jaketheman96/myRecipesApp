@@ -7,6 +7,7 @@ import shareIcon from '../images/shareIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import RecipesContext from '../context/RecipesContext';
+import styles from '../styles/RecipeDetailsFoods.module.css';
 
 const RECIPES = 6;
 
@@ -106,49 +107,55 @@ function RecipeDetailsFoods({ match: { url, params: { id } } }) {
 
   return (
     <section
-      style={ { backgroundColor: 'grey' } }
+      className={ styles.recipesPage }
     >
       {foodDetails && recomendations
         ? foodDetails.meals.map((element, index) => (
-          <div key={ index }>
+          <div key={ index } className={ styles.recipesPageDrink }>
             <img
               src={ element.strMealThumb }
               alt={ element.strMeal }
               data-testid="recipe-photo"
-              width="200"
-              height="200"
+              className={ styles.recipesPageDrinkImg }
             />
-            <h1 data-testid="recipe-title">{ element.strMeal }</h1>
             <div
-              style={ {
-                display: 'flex',
-                justifyContent: 'space-around',
-              } }
+              className={ styles.recipesPageDrinkDiv }
             >
-              <input
-                type="image"
-                src={ shareIcon }
-                alt="Share Button"
-                name="share-btn"
-                data-testid="share-btn"
-                onClick={ handleShareClick }
-              />
-              { copySuccess }
-              <input
-                type="image"
-                src={ showBlackButton ? blackHeartIcon : whiteHeartIcon }
-                alt="Favorite Button"
-                name="favorite-btn"
-                data-testid="favorite-btn"
-                onClick={ handleFavoriteClick }
-              />
+              <h1
+                data-testid="recipe-title"
+                className={ styles.recipesPageDrinkName }
+              >
+                { element.strMeal }
+              </h1>
+              <div className={ styles.recipesPageDrinkDiv2 }>
+                <input
+                  type="image"
+                  src={ shareIcon }
+                  alt="Share Button"
+                  name="share-btn"
+                  data-testid="share-btn"
+                  onClick={ handleShareClick }
+                  className={ styles.input1 }
+                />
+                { copySuccess }
+                <input
+                  type="image"
+                  src={ showBlackButton ? blackHeartIcon : whiteHeartIcon }
+                  alt="Favorite Button"
+                  name="favorite-btn"
+                  data-testid="favorite-btn"
+                  onClick={ handleFavoriteClick }
+                  className={ styles.input2 }
+                />
+              </div>
             </div>
-            <p>Recomendacoes:</p>
             <Carousel>
+              <p className={ styles.recomendation }>Recomendacoes:</p>
               {recomendations.map((recomend, position) => (
                 <Carousel.Item
                   key={ position }
                   data-testid={ `${position}-recomendation-card` }
+                  className={ styles.carousel }
                 >
                   <img
                     src={ recomend.strDrinkThumb }
@@ -163,7 +170,7 @@ function RecipeDetailsFoods({ match: { url, params: { id } } }) {
                 </Carousel.Item>
               ))}
             </Carousel>
-            <div>
+            <div className={ styles.ingredients }>
               <iframe
                 width="300"
                 height="200"
@@ -172,36 +179,48 @@ function RecipeDetailsFoods({ match: { url, params: { id } } }) {
                 data-testid="video"
                 frameBorder="0"
                 allowFullScreen
+                className={ styles.video }
               />
             </div>
-            <p data-testid="recipe-category">{ `Categoria: ${element.strCategory}` }</p>
-            <p data-testid="instructions">
-              { `Instructions: ${element.strInstructions}` }
-            </p>
-            <ul>
-              { arrayOfNum && arrayOfNum.map((number, position) => (
-                <li
-                  key={ number }
-                  data-testid={ `${position}-ingredient-name-and-measure` }
-                >
-                  <p>
-                    { `${element[`strIngredient${number}`]} 
-                      ${element[`strMeasure${number}`]}` }
-                  </p>
-                </li>
-              ))}
-            </ul>
+            <div className={ styles.categorias }>
+              <p
+                data-testid="recipe-category"
+                className={ styles.categoria }
+              >
+                { `Categoria: ${element.strCategory}` }
+              </p>
+              <p
+                data-testid="instructions"
+                className={ styles.categoria }
+              >
+                { `Instructions: ${element.strInstructions}` }
+              </p>
+              <ul>
+                { arrayOfNum && arrayOfNum.map((number, position) => (
+                  <li
+                    key={ number }
+                    data-testid={ `${position}-ingredient-name-and-measure` }
+                  >
+                    <p>
+                      { `${element[`strIngredient${number}`]} 
+                        ${element[`strMeasure${number}`]}` }
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         ))
         : <p>Loading...</p>}
       <footer>
-        <button type="button">
+        <button type="button" className={ styles.footerButton1 }>
           <a href="/foods">
             <i className="fas fa-arrow-left" />
             Back to recipes
           </a>
         </button>
         <button
+          className={ styles.footerButton1 }
           id="start-recipe-btn"
           type="button"
           data-testid="start-recipe-btn"
