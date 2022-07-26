@@ -17,7 +17,7 @@ function FoodInProgress() {
   const [checkedState, setCheckedState] = useState([]);
   const [ingredients, setIngredients] = useState(null);
 
-  const { url, params: { id } } = useRouteMatch();
+  const { params: { id } } = useRouteMatch();
 
   useEffect(() => {
     const getItem = JSON.parse(localStorage.getItem('inProgressRecipes'));
@@ -96,7 +96,7 @@ function FoodInProgress() {
   }, []);
 
   const handleShareClick = () => {
-    clipboardCopy(`http://localhost:3000${url}`);
+    clipboardCopy(`http://localhost:3000/foods/${id}`);
     setCopySuccess('Link copied!');
   };
 

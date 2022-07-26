@@ -17,7 +17,7 @@ function DrinkInProgress() {
   const [checkedState, setCheckedState] = useState([]);
   const [ingredients, setIngredients] = useState(null);
 
-  const { url, params: { id } } = useRouteMatch();
+  const { params: { id } } = useRouteMatch();
 
   useEffect(() => {
     const getItem = JSON.parse(localStorage.getItem('inProgressRecipes'));
@@ -96,7 +96,7 @@ function DrinkInProgress() {
   }, []);
 
   const handleShareClick = () => {
-    clipboardCopy(`http://localhost:3000${url}`);
+    clipboardCopy(`http://localhost:3000/drinks/${id}`);
     setCopySuccess('Link copied!');
   };
 
@@ -105,7 +105,7 @@ function DrinkInProgress() {
     setIsFavorited(!isFavorited);
     const array = [];
     let obj = {};
-    foodDetails.forEach((element) => {
+    drinkDetails.forEach((element) => {
       obj = {
         id: element.idDrink,
         type: 'drink',
