@@ -19,11 +19,28 @@ function DrinkInProgress() {
 
   const { url, params: { id } } = useRouteMatch();
 
+  useEffect(() => {
+    const getItem = JSON.parse(localStorage.getItem('inProgressRecipes'));
+    const handleStorageChecked = () => {
+      if (!getItem && ingredientLength.length) {
+        localStorage.setItem('inProgressRecipes', JSON.stringify(
+          new Array(ingredientLength[0].length).fill(false),
+        ));
+        setCheckedState(new Array(ingredientLength[0].length).fill(false));
+      }
+      if (getItem) {
+        setCheckedState(getItem);
+      }
+    };
+    handleStorageChecked();
+  }, [ingredientLength]);
+
   const handleChange = (position) => {
     const updatedCheckedState = checkedState.map((element, index) => (
       index === position ? !element : element
     ));
     setCheckedState(updatedCheckedState);
+    localStorage.setItem('inProgressRecipes', JSON.stringify(updatedCheckedState));
   };
 
   useEffect(() => {
@@ -34,15 +51,6 @@ function DrinkInProgress() {
       setIngredients(filteringIng);
     }
   }, [filteredDetails, ingredientLength]);
-
-  useEffect(() => {
-    const handleChecked = () => {
-      if (ingredientLength.length) {
-        setCheckedState(new Array(ingredientLength[0].length).fill(false));
-      }
-    };
-    handleChecked();
-  }, [ingredientLength]);
 
   useEffect(() => {
     const handleNullKeys = () => {
