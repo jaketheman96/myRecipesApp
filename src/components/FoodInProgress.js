@@ -16,8 +16,18 @@ function FoodInProgress() {
   const [ingredientLength, setIngredientLength] = useState([]);
   const [checkedState, setCheckedState] = useState([]);
   const [ingredients, setIngredients] = useState(null);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   const { params: { id } } = useRouteMatch();
+
+  useEffect(() => {
+    const handleDisable = () => {
+      if (checkedState) {
+        setIsButtonDisabled(!checkedState.every((element) => element === true));
+      }
+    };
+    handleDisable();
+  }, [checkedState]);
 
   useEffect(() => {
     const getItem = JSON.parse(localStorage.getItem('inProgressRecipes'));
@@ -211,6 +221,7 @@ function FoodInProgress() {
           <button
             type="button"
             data-testid="finish-recipe-btn"
+            disabled={ isButtonDisabled }
           >
             Finish Recipe
           </button>
