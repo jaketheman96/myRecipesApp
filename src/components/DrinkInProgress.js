@@ -1,14 +1,16 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import clipboardCopy from 'clipboard-copy';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import shareIcon from '../images/shareIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
-import RecipesContext from '../context/RecipesContext';
+
+const current = new Date();
+const today = `${current.getDate()}/${current.getMonth() + 1}/${current.getFullYear()}`;
+const array = [];
+let obj = {};
 
 function DrinkInProgress() {
-  const { setLoading } = useContext(RecipesContext);
-
   const [drinkDetails, setDrinkDetails] = useState(null);
   const [copySuccess, setCopySuccess] = useState('');
   const [isFavorited, setIsFavorited] = useState(false);
@@ -17,9 +19,29 @@ function DrinkInProgress() {
   const [checkedState, setCheckedState] = useState([]);
   const [ingredients, setIngredients] = useState(null);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-
   const { params: { id } } = useRouteMatch();
   const history = useHistory();
+
+  const handleClick = () => {
+    history.push('/done-recipes');
+    localStorage.removeItem('inProgressRecipes');
+    const getItem = JSON.parse(localStorage.getItem('doneRecipes'));
+    drinkDetails.forEach((e) => {
+      obj = {
+        id: e.idDrink,
+        img: e.strDrinkThumb,
+        category: e.strCategory,
+        name: e.strDrink,
+        date: today,
+        tags: e.strTags ? e.strTags.split(',') : [],
+      };
+    });
+    if (!getItem) {
+      array.push(obj);
+      localStorage.setItem('doneRecipes', JSON.stringify(array));
+    }
+    if (getItem) localStorage.setItem('doneRecipes', JSON.stringify(getItem.concat(obj)));
+  };
 
   useEffect(() => {
     const handleDisable = () => {
@@ -39,9 +61,7 @@ function DrinkInProgress() {
         ));
         setCheckedState(new Array(ingredientLength[0].length).fill(false));
       }
-      if (getItem) {
-        setCheckedState(getItem);
-      }
+      if (getItem) setCheckedState(getItem);
     };
     handleStorageChecked();
   }, [ingredientLength]);
@@ -94,7 +114,6 @@ function DrinkInProgress() {
   useEffect(() => {
     const fetchDrinkDetails = async () => {
       const urlApi = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`;
-      setLoading(true);
       fetch(urlApi)
         .then((response) => response.json())
         .then(({ drinks }) => {
@@ -103,7 +122,6 @@ function DrinkInProgress() {
         .catch((error) => console.log(error));
     };
     fetchDrinkDetails();
-    setLoading(false);
   }, []);
 
   const handleShareClick = () => {
@@ -114,8 +132,6 @@ function DrinkInProgress() {
   const handleFavoriteClick = () => {
     let getItem = JSON.parse(localStorage.getItem('favoriteRecipes'));
     setIsFavorited(!isFavorited);
-    const array = [];
-    let obj = {};
     drinkDetails.forEach((element) => {
       obj = {
         id: element.idDrink,
@@ -148,9 +164,7 @@ function DrinkInProgress() {
       const getStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
       if (getStorage && getStorage.some((item) => item.id === id)) {
         setIsFavorited(true);
-      } else {
-        setIsFavorited(false);
-      }
+      } else setIsFavorited(false);
     };
     handleConditional();
   }, []);
@@ -222,7 +236,7 @@ function DrinkInProgress() {
         type="button"
         data-testid="finish-recipe-btn"
         disabled={ isButtonDisabled }
-        onClick={ () => history.push('/done-recipes') }
+        onClick={ handleClick }
       >
         Finish Recipe
       </button>
