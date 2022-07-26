@@ -13,8 +13,27 @@ function FoodInProgress() {
   const [copySuccess, setCopySuccess] = useState('');
   const [isFavorited, setIsFavorited] = useState(false);
   const [filteredDetails, setFilteredDetails] = useState(null);
+  const [ingredientLength, setIngredientLength] = useState([]);
+  const [checkedState, setCheckedState] = useState([]);
+  const [ingredients, setIngredients] = useState(null);
 
   const { url, params: { id } } = useRouteMatch();
+
+  const handleChange = (position) => {
+    const updatedCheckedState = checkedState.map((element, index) => (
+      index === position ? !element : element
+    ));
+    setCheckedState(updatedCheckedState);
+  };
+
+  useEffect(() => {
+    if (filteredDetails && ingredientLength.length) {
+      const filteringIng = ingredientLength[0].map((ingredient) => (
+        filteredDetails.map((e) => e[ingredient])
+      ));
+      setIngredients(filteringIng);
+    }
+  }, [filteredDetails, ingredientLength]);
 
   useEffect(() => {
     const handleNullKeys = () => {
@@ -32,6 +51,26 @@ function FoodInProgress() {
     };
     handleNullKeys();
   }, [foodDetails]);
+
+  useEffect(() => {
+    const handleFilterIng = () => {
+      if (filteredDetails) {
+        setIngredientLength(filteredDetails.map((e) => Object.keys(e).filter((key) => (
+          key.includes('strIngredient')
+        ))));
+      }
+    };
+    handleFilterIng();
+  }, [filteredDetails]);
+
+  useEffect(() => {
+    const handleChecked = () => {
+      if (ingredientLength.length) {
+        setCheckedState(new Array(ingredientLength[0].length).fill(false));
+      }
+    };
+    handleChecked();
+  }, [ingredientLength]);
 
   useEffect(() => {
     const fetchFoodDetails = async () => {
@@ -134,27 +173,30 @@ function FoodInProgress() {
               onClick={ handleFavoriteClick }
             />
           </div>
-          {Object.keys(food).map((key, position) => {
-            if (key.includes('strIngredient')) {
-              return (
-                <div
-                  style={ { display: 'flex', flexDirection: 'column' } }
-                  key={ position }
-                  data-testid={ `${position}-ingredient-step` }
-                >
-                  <label htmlFor={ `ingredient${position}` }>
-                    <input
-                      type="checkbox"
-                      id={ `ingredient${position}` }
-                      key={ position }
-                    />
-                    {food[key]}
-                  </label>
-                </div>
-              );
-            }
-            return null;
-          })}
+          {ingredients && ingredients.map((element, position) => (
+            element.map((item) => (
+              <div
+                style={ {
+                  display: 'flex',
+                  flexDirection: 'column',
+                } }
+                key={ position }
+                data-testid={ `${position}-ingredient-step` }
+              >
+                <label htmlFor={ `ingredient${position}` }>
+                  <input
+                    type="checkbox"
+                    id={ `ingredient${position}` }
+                    name={ item }
+                    value={ item }
+                    checked={ checkedState[position] }
+                    onChange={ () => handleChange(position) }
+                  />
+                  {item}
+                </label>
+              </div>
+            ))
+          ))}
           <p data-testid="instructions">
             { `Instructions: ${food.strInstructions}` }
           </p>
