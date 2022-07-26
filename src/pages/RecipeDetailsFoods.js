@@ -1,12 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useRouteMatch } from 'react-router-dom';
 import clipboardCopy from 'clipboard-copy';
 import shareIcon from '../images/shareIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import RecipesContext from '../context/RecipesContext';
 import styles from '../styles/RecipeDetailsFoods.module.css';
+import FooterButtons from '../components/FooterButtons';
 
 const RECIPES = 6;
 
@@ -25,8 +26,36 @@ function RecipeDetailsFoods() {
   const [recomendations, setRecomendations] = useState(null);
   const [copySuccess, setCopySuccess] = useState('');
   const [isFavorited, setIsFavorited] = useState(false);
+  const [ingredientLength, setIngredientLength] = useState([]);
+  const [filteredDetails, setFilteredDetails] = useState(null);
 
-  const history = useHistory();
+  useEffect(() => {
+    const handleNullKeys = () => {
+      if (foodDetails) {
+        const filtered = foodDetails.map((element) => {
+          Object.keys(element).forEach((key) => {
+            if (!element[key] || element[key] === ' ') {
+              delete element[key];
+            }
+          });
+          return element;
+        });
+        setFilteredDetails(filtered);
+      }
+    };
+    handleNullKeys();
+  }, [foodDetails]);
+
+  useEffect(() => {
+    const handleFilterIng = () => {
+      if (filteredDetails) {
+        setIngredientLength(filteredDetails.map((e) => Object.keys(e).filter((key) => (
+          key.includes('strIngredient') || key.includes('strMeasure')
+        ))));
+      }
+    };
+    handleFilterIng();
+  }, [filteredDetails]);
 
   useEffect(() => {
     setPathNames('Foods');
@@ -42,13 +71,18 @@ function RecipeDetailsFoods() {
   }, [drinkData]);
 
   useEffect(() => {
-    const array = [];
-    const size = 15;
-    for (let i = 1; i <= size; i += 1) {
-      array.push(i);
-    }
-    setArrayOfNum(array);
-  }, []);
+    const handleIngredientLength = () => {
+      if (ingredientLength.length) {
+        const array = [];
+        const size = ingredientLength[0].length / 2;
+        for (let i = 1; i <= size; i += 1) {
+          array.push(i);
+        }
+        setArrayOfNum(array);
+      }
+    };
+    handleIngredientLength();
+  }, [ingredientLength]);
 
   useEffect(() => {
     const fetchFoodDetails = async () => {
@@ -118,9 +152,7 @@ function RecipeDetailsFoods() {
   }, []);
 
   return (
-    <section
-      className={ styles.recipesPage }
-    >
+    <section className={ styles.recipesPage }>
       {foodDetails && recomendations
         ? foodDetails.map((element, index) => (
           <div key={ index } className={ styles.recipesPageDrink }>
@@ -149,10 +181,7 @@ function RecipeDetailsFoods() {
                 onClick={ handleFavoriteClick }
               />
             </div>
-            <h1
-              data-testid="recipe-title"
-              className={ styles.recipesPageDrinkName }
-            >
+            <h1 data-testid="recipe-title" className={ styles.recipesPageDrinkName }>
               { element.strMeal }
             </h1>
             <Carousel>
@@ -210,24 +239,7 @@ function RecipeDetailsFoods() {
           </div>
         ))
         : <p>Loading...</p>}
-      <footer>
-        <button type="button" className={ styles.footerButton1 }>
-          <a href="/foods">
-            <i className="fas fa-arrow-left" />
-            Back to recipes
-          </a>
-        </button>
-        <button
-          className={ styles.footerButton1 }
-          id="start-recipe-btn"
-          type="button"
-          data-testid="start-recipe-btn"
-          style={ { position: 'fixed' } }
-          onClick={ () => history.push(`/foods/${id}/in-progress`) }
-        >
-          Start Recipe
-        </button>
-      </footer>
+      <FooterButtons />
     </section>
   );
 }

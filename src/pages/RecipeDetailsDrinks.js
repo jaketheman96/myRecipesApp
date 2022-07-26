@@ -1,33 +1,78 @@
 import React, { useContext, useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import Carousel from 'react-bootstrap/Carousel';
-import { useHistory } from 'react-router-dom';
+import { useRouteMatch } from 'react-router-dom';
 import shareIcon from '../images/shareIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import RecipesContext from '../context/RecipesContext';
 import styles from '../styles/RecipeDetailsDrinks.module.css';
+import FooterButtons from '../components/FooterButtons';
 
 const RECIPES = 6;
 const copy = require('clipboard-copy');
 
-function RecipeDetailsDrinks({ match: { url, params: { id } } }) {
+function RecipeDetailsDrinks() {
   const {
     setLoading,
     foodData,
     setPathNames,
   } = useContext(RecipesContext);
 
+  const { url, params: { id } } = useRouteMatch();
+
   const [drinkDetails, setDrinkDetails] = useState(null);
   const [arrayOfNum, setArrayOfNum] = useState(null);
   const [recomendations, setRecomendations] = useState(null);
   const [copySuccess, setCopySuccess] = useState('');
   const [isFavorited, setIsFavorited] = useState(false);
-  const history = useHistory();
+  const [ingredientLength, setIngredientLength] = useState([]);
+  const [filteredDetails, setFilteredDetails] = useState(null);
 
   useEffect(() => {
     setPathNames('Drinks');
   });
+
+  useEffect(() => {
+    const handleNullKeys = () => {
+      if (drinkDetails) {
+        const filtered = drinkDetails.map((element) => {
+          Object.keys(element).forEach((key) => {
+            if (!element[key] || element[key] === ' ') {
+              delete element[key];
+            }
+          });
+          return element;
+        });
+        setFilteredDetails(filtered);
+      }
+    };
+    handleNullKeys();
+  }, [drinkDetails]);
+
+  useEffect(() => {
+    const handleFilterIng = () => {
+      if (filteredDetails) {
+        setIngredientLength(filteredDetails.map((e) => Object.keys(e).filter((key) => (
+          key.includes('strIngredient') || key.includes('strMeasure')
+        ))));
+      }
+    };
+    handleFilterIng();
+  }, [filteredDetails]);
+
+  useEffect(() => {
+    const handleIngredientLength = () => {
+      if (ingredientLength.length) {
+        const array = [];
+        const size = ingredientLength[0].length / 2;
+        for (let i = 1; i <= size; i += 1) {
+          array.push(i);
+        }
+        setArrayOfNum(array);
+      }
+    };
+    handleIngredientLength();
+  }, [ingredientLength]);
 
   useEffect(() => {
     const array = [];
@@ -193,35 +238,9 @@ function RecipeDetailsDrinks({ match: { url, params: { id } } }) {
           </div>
         ))
         : <p>Loading...</p>}
-      <footer>
-        <button type="button" className={ styles.footerButton1 }>
-          <a href="/drinks">
-            <i className="fas fa-arrow-left" />
-            Back to recipes
-          </a>
-        </button>
-        <button
-          className={ styles.footerButton1 }
-          id="start-recipe-btn"
-          type="button"
-          data-testid="start-recipe-btn"
-          style={ { position: 'fixed' } }
-          onClick={ () => history.push(`/drinks/${id}/in-progress`) }
-        >
-          Start Recipe
-        </button>
-      </footer>
+      <FooterButtons />
     </section>
   );
 }
-
-RecipeDetailsDrinks.propTypes = {
-  match: PropTypes.shape({
-    url: PropTypes.string.isRequired,
-    params: PropTypes.shape(
-      PropTypes.string.isRequired,
-    ).isRequired,
-  }).isRequired,
-};
 
 export default RecipeDetailsDrinks;

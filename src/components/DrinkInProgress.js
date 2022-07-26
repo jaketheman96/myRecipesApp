@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import clipboardCopy from 'clipboard-copy';
-import { useRouteMatch } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import shareIcon from '../images/shareIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
@@ -13,8 +13,55 @@ function DrinkInProgress() {
   const [copySuccess, setCopySuccess] = useState('');
   const [isFavorited, setIsFavorited] = useState(false);
   const [filteredDetails, setFilteredDetails] = useState(null);
+  const [ingredientLength, setIngredientLength] = useState([]);
+  const [checkedState, setCheckedState] = useState([]);
+  const [ingredients, setIngredients] = useState(null);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
-  const { url, params: { id } } = useRouteMatch();
+  const { params: { id } } = useRouteMatch();
+  const history = useHistory();
+
+  useEffect(() => {
+    const handleDisable = () => {
+      if (checkedState) {
+        setIsButtonDisabled(!checkedState.every((element) => element === true));
+      }
+    };
+    handleDisable();
+  }, [checkedState]);
+
+  useEffect(() => {
+    const getItem = JSON.parse(localStorage.getItem('inProgressRecipes'));
+    const handleStorageChecked = () => {
+      if (!getItem && ingredientLength.length) {
+        localStorage.setItem('inProgressRecipes', JSON.stringify(
+          new Array(ingredientLength[0].length).fill(false),
+        ));
+        setCheckedState(new Array(ingredientLength[0].length).fill(false));
+      }
+      if (getItem) {
+        setCheckedState(getItem);
+      }
+    };
+    handleStorageChecked();
+  }, [ingredientLength]);
+
+  const handleChange = (position) => {
+    const updatedCheckedState = checkedState.map((element, index) => (
+      index === position ? !element : element
+    ));
+    setCheckedState(updatedCheckedState);
+    localStorage.setItem('inProgressRecipes', JSON.stringify(updatedCheckedState));
+  };
+
+  useEffect(() => {
+    if (filteredDetails && ingredientLength.length) {
+      const filteringIng = ingredientLength[0].map((ingredient) => (
+        filteredDetails.map((e) => e[ingredient])
+      ));
+      setIngredients(filteringIng);
+    }
+  }, [filteredDetails, ingredientLength]);
 
   useEffect(() => {
     const handleNullKeys = () => {
@@ -34,6 +81,17 @@ function DrinkInProgress() {
   }, [drinkDetails]);
 
   useEffect(() => {
+    const handleFilterIng = () => {
+      if (filteredDetails) {
+        setIngredientLength(filteredDetails.map((e) => Object.keys(e).filter((key) => (
+          key.includes('strIngredient')
+        ))));
+      }
+    };
+    handleFilterIng();
+  }, [filteredDetails]);
+
+  useEffect(() => {
     const fetchDrinkDetails = async () => {
       const urlApi = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`;
       setLoading(true);
@@ -49,7 +107,7 @@ function DrinkInProgress() {
   }, []);
 
   const handleShareClick = () => {
-    clipboardCopy(`http://localhost:3000${url}`);
+    clipboardCopy(`http://localhost:3000/drinks/${id}`);
     setCopySuccess('Link copied!');
   };
 
@@ -58,7 +116,7 @@ function DrinkInProgress() {
     setIsFavorited(!isFavorited);
     const array = [];
     let obj = {};
-    foodDetails.forEach((element) => {
+    drinkDetails.forEach((element) => {
       obj = {
         id: element.idDrink,
         type: 'drink',
@@ -137,35 +195,37 @@ function DrinkInProgress() {
           <p data-testid="instructions">
             { `Instructions: ${drink.strInstructions}` }
           </p>
-          {Object.keys(drink).map((key, position) => {
-            if (key.includes('strIngredient')) {
-              return (
-                <div
-                  style={ { display: 'flex', flexDirection: 'column' } }
-                  key={ position }
-                  data-testid={ `${position}-ingredient-step` }
-                >
-                  <label htmlFor={ `ingredient${position}` }>
-                    <input
-                      type="checkbox"
-                      id={ `ingredient${position}` }
-                      key={ position }
-                    />
-                    {drink[key]}
-                  </label>
-                </div>
-              );
-            }
-            return null;
-          })}
-          <button
-            type="button"
-            data-testid="finish-recipe-btn"
-          >
-            Finish Recipe
-          </button>
         </div>
       )) }
+      {ingredients && ingredients.map((element, position) => (
+        element.map((item) => (
+          <div
+            style={ { display: 'flex', flexDirection: 'column' } }
+            key={ position }
+            data-testid={ `${position}-ingredient-step` }
+          >
+            <label htmlFor={ `ingredient${position}` }>
+              <input
+                type="checkbox"
+                id={ `ingredient${position}` }
+                name={ item }
+                value={ item }
+                checked={ checkedState[position] }
+                onChange={ () => handleChange(position) }
+              />
+              {item}
+            </label>
+          </div>
+        ))
+      ))}
+      <button
+        type="button"
+        data-testid="finish-recipe-btn"
+        disabled={ isButtonDisabled }
+        onClick={ () => history.push('/done-recipes') }
+      >
+        Finish Recipe
+      </button>
     </div>
   );
 }
