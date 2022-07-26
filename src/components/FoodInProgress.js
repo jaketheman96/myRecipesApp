@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import clipboardCopy from 'clipboard-copy';
-import { useRouteMatch } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import shareIcon from '../images/shareIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
@@ -19,6 +19,7 @@ function FoodInProgress() {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   const { params: { id } } = useRouteMatch();
+  const history = useHistory();
 
   useEffect(() => {
     const handleDisable = () => {
@@ -222,6 +223,7 @@ function FoodInProgress() {
             type="button"
             data-testid="finish-recipe-btn"
             disabled={ isButtonDisabled }
+            onClick={ () => history.push('/done-recipes') }
           >
             Finish Recipe
           </button>
