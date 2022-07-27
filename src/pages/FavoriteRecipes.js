@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Header from '../components/header/Header';
 import shareIcon from '../images/shareIcon.svg';
@@ -9,7 +8,6 @@ const copy = require('clipboard-copy');
 
 function FavoriteRecipes() {
   const initialFavoriteRecipes = JSON.parse(localStorage.favoriteRecipes);
-  console.log(initialFavoriteRecipes);
 
   const [copySuccess, setCopySuccess] = useState('');
   const [favoriteAll, setFavoriteAll] = useState(initialFavoriteRecipes);
@@ -22,20 +20,17 @@ function FavoriteRecipes() {
   const handFilterFood = () => {
     const initialFavoriteRecipes1 = JSON.parse(localStorage.favoriteRecipes);
     const foodFilter = initialFavoriteRecipes1.filter((r) => r.type !== 'drink');
-    console.log('foodFilter: ', foodFilter);
     setFavoriteAll(foodFilter);
   };
 
   const handFilterDrink = () => {
     const initialFavoriteRecipes2 = JSON.parse(localStorage.favoriteRecipes);
     const drinkFilter = initialFavoriteRecipes2.filter((r) => r.type !== 'food');
-    console.log('drinkFilter: ', drinkFilter);
     setFavoriteAll(drinkFilter);
   };
 
   const handFilterAll = () => {
     const initialFavoriteRecipes3 = JSON.parse(localStorage.favoriteRecipes);
-    console.log('initialFavoriteRecipes: ', initialFavoriteRecipes3);
     setFavoriteAll(initialFavoriteRecipes3);
   };
 
@@ -132,14 +127,5 @@ function FavoriteRecipes() {
     </div>
   );
 }
-
-FavoriteRecipes.propTypes = {
-  match: PropTypes.shape({
-    url: PropTypes.string.isRequired,
-    params: PropTypes.shape(
-      PropTypes.string.isRequired,
-    ).isRequired,
-  }).isRequired,
-};
 
 export default FavoriteRecipes;

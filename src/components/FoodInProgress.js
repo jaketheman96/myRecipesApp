@@ -1,14 +1,16 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import clipboardCopy from 'clipboard-copy';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import shareIcon from '../images/shareIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
-import RecipesContext from '../context/RecipesContext';
+
+const current = new Date();
+const today = `${current.getDate()}/${current.getMonth() + 1}/${current.getFullYear()}`;
+const array = [];
+let obj = {};
 
 function FoodInProgress() {
-  const { setLoading } = useContext(RecipesContext);
-
   const [foodDetails, setFoodDetails] = useState(null);
   const [copySuccess, setCopySuccess] = useState('');
   const [isFavorited, setIsFavorited] = useState(false);
@@ -17,9 +19,32 @@ function FoodInProgress() {
   const [checkedState, setCheckedState] = useState([]);
   const [ingredients, setIngredients] = useState(null);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-
   const { params: { id } } = useRouteMatch();
   const history = useHistory();
+
+  const handleClick = () => {
+    history.push('/done-recipes');
+    localStorage.removeItem('inProgressRecipes');
+    const getItem = JSON.parse(localStorage.getItem('doneRecipes'));
+    foodDetails.forEach((e) => {
+      obj = {
+        id: e.idMeal,
+        type: 'food',
+        image: e.strMealThumb,
+        nationality: e.strArea,
+        category: e.strCategory,
+        alcoholicOrNot: '',
+        name: e.strMeal,
+        doneDate: today,
+        tags: e.strTags ? e.strTags.split(',') : [],
+      };
+    });
+    if (!getItem) {
+      array.push(obj);
+      localStorage.setItem('doneRecipes', JSON.stringify(array));
+    }
+    if (getItem) localStorage.doneRecipes = JSON.stringify(getItem.concat(obj));
+  };
 
   useEffect(() => {
     const handleDisable = () => {
@@ -94,28 +119,16 @@ function FoodInProgress() {
   useEffect(() => {
     const fetchFoodDetails = async () => {
       const urlApi = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`;
-      setLoading(true);
-      fetch(urlApi)
-        .then((response) => response.json())
-        .then(({ meals }) => {
-          setFoodDetails(meals);
-        })
+      fetch(urlApi).then((response) => response.json())
+        .then(({ meals }) => setFoodDetails(meals))
         .catch((error) => console.log(error));
     };
     fetchFoodDetails();
-    setLoading(false);
   }, []);
-
-  const handleShareClick = () => {
-    clipboardCopy(`http://localhost:3000/foods/${id}`);
-    setCopySuccess('Link copied!');
-  };
 
   const handleFavoriteClick = () => {
     let getItem = JSON.parse(localStorage.getItem('favoriteRecipes'));
     setIsFavorited(!isFavorited);
-    const array = [];
-    let obj = {};
     foodDetails.forEach((element) => {
       obj = {
         id: element.idMeal,
@@ -133,9 +146,7 @@ function FoodInProgress() {
     }
     if (getItem) {
       const condition = getItem.some((item) => item.id === id);
-      if (!condition) {
-        localStorage.favoriteRecipes = JSON.stringify(getItem.concat(obj));
-      }
+      if (!condition) localStorage.favoriteRecipes = JSON.stringify(getItem.concat(obj));
       if (condition) {
         getItem = getItem.filter((itens) => itens.id !== id);
         localStorage.favoriteRecipes = JSON.stringify(getItem);
@@ -148,9 +159,7 @@ function FoodInProgress() {
       const getStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
       if (getStorage && getStorage.some((item) => item.id === id)) {
         setIsFavorited(true);
-      } else {
-        setIsFavorited(false);
-      }
+      } else setIsFavorited(false);
     };
     handleConditional();
   }, []);
@@ -180,7 +189,10 @@ function FoodInProgress() {
               alt="Share Button"
               name="share-btn"
               data-testid="share-btn"
-              onClick={ handleShareClick }
+              onClick={ () => {
+                clipboardCopy(`http://localhost:3000/foods/${id}`);
+                setCopySuccess('Link copied!');
+              } }
             />
             { copySuccess }
             <input
@@ -223,7 +235,7 @@ function FoodInProgress() {
             type="button"
             data-testid="finish-recipe-btn"
             disabled={ isButtonDisabled }
-            onClick={ () => history.push('/done-recipes') }
+            onClick={ handleClick }
           >
             Finish Recipe
           </button>
