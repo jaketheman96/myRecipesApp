@@ -29,10 +29,13 @@ function FoodInProgress() {
     foodDetails.forEach((e) => {
       obj = {
         id: e.idMeal,
-        img: e.strMealThumb,
+        type: 'food',
+        image: e.strMealThumb,
+        nationality: e.strArea,
         category: e.strCategory,
+        alcoholicOrNot: '',
         name: e.strMeal,
-        date: today,
+        doneDate: today,
         tags: e.strTags ? e.strTags.split(',') : [],
       };
     });

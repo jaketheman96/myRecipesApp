@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import DrinkDoneCard from '../components/DrinkDoneCard';
+import FoodDoneCard from '../components/FoodDoneCard';
 import Header from '../components/header/Header';
 
 function DoneRecipes() {
   const [infosOfStorage, setInfosOfStorage] = useState([]);
+  const [isDrinkOrFood, setIsDrinkOrFood] = useState('all');
+  const [filteredInfos, setFilteredInfos] = useState([]);
 
   useEffect(() => {
     const getInfosOfStorage = () => {
@@ -14,48 +18,58 @@ function DoneRecipes() {
     getInfosOfStorage();
   }, []);
 
+  useEffect(() => {
+    const handleConditional = () => {
+      if (infosOfStorage.length && isDrinkOrFood === 'foods') {
+        setFilteredInfos(infosOfStorage.filter((e) => e.type === 'food'));
+      }
+      if (infosOfStorage.length && isDrinkOrFood === 'drinks') {
+        setFilteredInfos(infosOfStorage.filter((e) => e.type === 'drink'));
+      }
+      if (infosOfStorage.length && isDrinkOrFood === 'all') {
+        setFilteredInfos(infosOfStorage);
+      }
+    };
+    handleConditional();
+  }, [isDrinkOrFood, infosOfStorage]);
+
   return (
     <>
       <Header />
-      <button type="button" data-testid="filter-by-all-btn">
+      <button
+        type="button"
+        data-testid="filter-by-all-btn"
+        onClick={ () => setIsDrinkOrFood('all') }
+      >
         All
       </button>
-      <button type="button" data-testid="filter-by-food-btn">
+      <button
+        type="button"
+        data-testid="filter-by-food-btn"
+        onClick={ () => setIsDrinkOrFood('foods') }
+      >
         Food
       </button>
-      <button type="button" data-testid="filter-by-drink-btn">
+      <button
+        type="button"
+        data-testid="filter-by-drink-btn"
+        onClick={ () => setIsDrinkOrFood('drinks') }
+      >
         Drinks
       </button>
-      {infosOfStorage.length ? infosOfStorage.map((info, index) => (
-        <div key={ index }>
-          <img
-            src={ info.img }
-            alt={ info.name }
-            data-testid={ `${index}-horizontal-image` }
-            width="150"
-          />
-          <p data-testid={ `${index}-horizontal-top-text` }>
-            { `Category: ${info.category}` }
-          </p>
-          <h3 data-testid={ `${index}-horizontal-name` }>
-            {info.name}
-          </h3>
-          <p data-testid={ `${index}-horizontal-done-date` }>
-            {info.date}
-          </p>
-          <button type="button" data-testid={ `${index}-horizontal-share-btn` }>
-            Share
-          </button>
-          {info.tags.length ? info.tags.map((tag, position) => (
-            <li
-              key={ position }
-              data-testid={ `${index}-${tag}-horizontal-tag` }
-            >
-              {tag}
-            </li>
-          )) : null}
-        </div>
-      )) : null}
+      {isDrinkOrFood === 'all' && filteredInfos.map((e, index) => (
+        e.type === 'food'
+          ? <FoodDoneCard key={ index } cardIndex={ index } />
+          : <DrinkDoneCard key={ index } cardIndex={ index } />
+      ))}
+      { isDrinkOrFood === 'foods' && filteredInfos.map((e, index) => (
+        e.type === 'food'
+        && <FoodDoneCard key={ index } cardIndex={ index } />
+      )) }
+      { isDrinkOrFood === 'drinks' && filteredInfos.map((e, index) => (
+        e.type === 'drink'
+        && <DrinkDoneCard key={ index } cardIndex={ index } />
+      )) }
     </>
   );
 }

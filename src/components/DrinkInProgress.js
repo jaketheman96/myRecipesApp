@@ -29,10 +29,13 @@ function DrinkInProgress() {
     drinkDetails.forEach((e) => {
       obj = {
         id: e.idDrink,
-        img: e.strDrinkThumb,
+        image: e.strDrinkThumb,
+        type: 'drink',
+        nationality: '',
+        alcoholicOrNot: e.strAlcoholic,
         category: e.strCategory,
         name: e.strDrink,
-        date: today,
+        doneDate: today,
         tags: e.strTags ? e.strTags.split(',') : [],
       };
     });
