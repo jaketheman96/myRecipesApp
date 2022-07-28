@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import clipboardCopy from 'clipboard-copy';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import shareIcon from '../images/shareIcon.svg';
+import '../styles/CheckboxLineThrough.css';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 
@@ -64,9 +65,7 @@ function FoodInProgress() {
         ));
         setCheckedState(new Array(ingredientLength[0].length).fill(false));
       }
-      if (getItem) {
-        setCheckedState(getItem);
-      }
+      if (getItem) setCheckedState(getItem);
     };
     handleStorageChecked();
   }, [ingredientLength]);
@@ -214,7 +213,10 @@ function FoodInProgress() {
                 key={ position }
                 data-testid={ `${position}-ingredient-step` }
               >
-                <label htmlFor={ `ingredient${position}` }>
+                <label
+                  htmlFor={ `ingredient${position}` }
+                  className={ checkedState[position] ? 'linethrough' : null }
+                >
                   <input
                     type="checkbox"
                     id={ `ingredient${position}` }

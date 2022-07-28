@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import clipboardCopy from 'clipboard-copy';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import shareIcon from '../images/shareIcon.svg';
+import '../styles/CheckboxLineThrough.css';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 
@@ -117,12 +118,10 @@ function DrinkInProgress() {
   useEffect(() => {
     const fetchDrinkDetails = async () => {
       const urlApi = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`;
-      fetch(urlApi)
-        .then((response) => response.json())
+      fetch(urlApi).then((response) => response.json())
         .then(({ drinks }) => {
           setDrinkDetails(drinks);
-        })
-        .catch((error) => console.log(error));
+        }).catch((error) => console.log(error));
     };
     fetchDrinkDetails();
   }, []);
@@ -152,9 +151,7 @@ function DrinkInProgress() {
     }
     if (getItem) {
       const condition = getItem.some((item) => item.id === id);
-      if (!condition) {
-        localStorage.favoriteRecipes = JSON.stringify(getItem.concat(obj));
-      }
+      if (!condition) localStorage.favoriteRecipes = JSON.stringify(getItem.concat(obj));
       if (condition) {
         getItem = getItem.filter((itens) => itens.id !== id);
         localStorage.favoriteRecipes = JSON.stringify(getItem);
@@ -221,7 +218,10 @@ function DrinkInProgress() {
             key={ position }
             data-testid={ `${position}-ingredient-step` }
           >
-            <label htmlFor={ `ingredient${position}` }>
+            <label
+              htmlFor={ `ingredient${position}` }
+              className={ checkedState[position] ? 'linethrough' : null }
+            >
               <input
                 type="checkbox"
                 id={ `ingredient${position}` }
