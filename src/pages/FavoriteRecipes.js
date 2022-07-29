@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/header/Header';
 import shareIcon from '../images/shareIcon.svg';
@@ -7,11 +7,18 @@ import blackHeartIcon from '../images/blackHeartIcon.svg';
 const copy = require('clipboard-copy');
 
 function FavoriteRecipes() {
-  const initialFavoriteRecipes = JSON.parse(localStorage.favoriteRecipes);
-
   const [copySuccess, setCopySuccess] = useState('');
-  const [favoriteAll, setFavoriteAll] = useState(initialFavoriteRecipes);
+  const [favoriteAll, setFavoriteAll] = useState([]);
 
+  useEffect(() => {
+    let favorites = localStorage.favoriteRecipes;
+    if (favorites) {
+      favorites = JSON.parse(favorites);
+      setFavoriteAll(favorites);
+    } else {
+      setFavoriteAll([]);
+    }
+  }, []);
   const handleShareClick = (event) => {
     copy(`http://localhost:3000/${event.target.value}`);
     setCopySuccess('Link copied!');
