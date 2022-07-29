@@ -10,7 +10,6 @@ function SearchBar() {
     setLoading,
     searchedData,
     setIsSearching,
-    setSavingId,
     setSearchedData,
     resultCategoriaFood,
   } = useContext(RecipesContext);
@@ -91,7 +90,6 @@ function SearchBar() {
         }
         if (searchedData.drinks.length === 1) {
           searchedData.drinks.map(({ idDrink }) => {
-            setSavingId(idDrink);
             history.push(`/drinks/${idDrink}`);
             return idDrink;
           });

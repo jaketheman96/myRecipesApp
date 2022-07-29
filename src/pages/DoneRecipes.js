@@ -33,6 +33,10 @@ function DoneRecipes() {
     handleConditional();
   }, [isDrinkOrFood, infosOfStorage]);
 
+  useEffect(() => {
+    localStorage.removeItem('inProgressInfos');
+  }, []);
+
   return (
     <>
       <Header />
