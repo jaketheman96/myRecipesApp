@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
-import Carousel from 'react-bootstrap/Carousel';
 import { useRouteMatch } from 'react-router-dom';
 import clipboardCopy from 'clipboard-copy';
+import { Carousel } from 'react-bootstrap';
 import shareIcon from '../images/shareIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
@@ -16,6 +16,8 @@ function RecipeDetailsFoods() {
     setLoading,
     drinkData,
     setPathNames,
+    recomendations,
+    setRecomendations,
   } = useContext(RecipesContext);
 
   const { url, params: { id } } = useRouteMatch();
@@ -23,7 +25,6 @@ function RecipeDetailsFoods() {
   const [foodDetails, setFoodDetails] = useState(null);
   const [arrayOfNum, setArrayOfNum] = useState([]);
   const [urlFood, setUrlFood] = useState('');
-  const [recomendations, setRecomendations] = useState(null);
   const [copySuccess, setCopySuccess] = useState('');
   const [isFavorited, setIsFavorited] = useState(false);
   const [ingredientLength, setIngredientLength] = useState([]);
@@ -184,25 +185,6 @@ function RecipeDetailsFoods() {
             <h1 data-testid="recipe-title" className={ styles.recipesPageDrinkName }>
               { element.strMeal }
             </h1>
-            <Carousel>
-              <p className={ styles.recomendation }>Recomendacoes:</p>
-              {recomendations.map((recomend, position) => (
-                <Carousel.Item
-                  key={ position }
-                  data-testid={ `${position}-recomendation-card` }
-                  className={ styles.carousel }
-                >
-                  <img
-                    src={ recomend.strDrinkThumb }
-                    alt={ recomend.strDrink }
-                    width="100"
-                  />
-                  <h1 data-testid={ `${position}-recomendation-title` }>
-                    { recomend.strDrink }
-                  </h1>
-                </Carousel.Item>
-              ))}
-            </Carousel>
             <div className={ styles.ingredients }>
               <iframe
                 width="300"
@@ -235,6 +217,24 @@ function RecipeDetailsFoods() {
                   </li>
                 ))}
               </ul>
+              <Carousel>
+                <p className={ styles.recomendation }>Recomendacoes:</p>
+                {recomendations.map((recomend, position) => (
+                  <Carousel.Item
+                    key={ position }
+                    data-testid={ `${position}-recomendation-card` }
+                  >
+                    <img
+                      src={ recomend.strDrinkThumb }
+                      alt={ recomend.strDrink }
+                      width="100"
+                    />
+                    <h1 data-testid={ `${position}-recomendation-title` }>
+                      { recomend.strDrink }
+                    </h1>
+                  </Carousel.Item>
+                ))}
+              </Carousel>
             </div>
           </div>
         ))

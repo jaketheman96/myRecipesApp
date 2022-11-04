@@ -16,13 +16,14 @@ function RecipeDetailsDrinks() {
     setLoading,
     foodData,
     setPathNames,
+    recomendations,
+    setRecomendations,
   } = useContext(RecipesContext);
 
   const { url, params: { id } } = useRouteMatch();
 
   const [drinkDetails, setDrinkDetails] = useState(null);
   const [arrayOfNum, setArrayOfNum] = useState(null);
-  const [recomendations, setRecomendations] = useState(null);
   const [copySuccess, setCopySuccess] = useState('');
   const [isFavorited, setIsFavorited] = useState(false);
   const [ingredientLength, setIngredientLength] = useState([]);

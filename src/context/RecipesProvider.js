@@ -13,6 +13,7 @@ function RecipesProvider({ children }) {
   const [searchedData, setSearchedData] = useState(null);
   const [foodData, setFoodData] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [recomendations, setRecomendations] = useState(null);
   const [drinkData, setDrinkData] = useState([]);
   const [pathNames, setPathNames] = useState(null);
   const [categoriaFood, setCategoriaFood] = useState([]);
@@ -112,6 +113,8 @@ function RecipesProvider({ children }) {
     setIsSearching,
     showFinishButton,
     setShowFinishButton,
+    recomendations,
+    setRecomendations,
   };
 
   return (

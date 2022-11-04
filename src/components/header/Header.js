@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import RecipesContext from '../../context/RecipesContext';
 import PageTitle from './PageTitle';
 import ProfileTopBtn from './ProfileTopBtn';
-// import SearchTopBtn from './SearchTopBtn';
 import styles from './styles/Header.module.css';
 import SearchBar from './SearchBar';
 import searchIcon from '../../images/searchIcon.svg';
