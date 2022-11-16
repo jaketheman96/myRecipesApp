@@ -8,3 +8,15 @@ Nesse projeto foi desenvolvido um aplicativo de receitas, com informações vind
 -UseContext
 -UseState
 -UseEffect
+
+# Startar a aplicação
+
+Utilize
+
+`npm start`
+
+para startar a aplicação, caso a página não abra sozinho, acesse 
+
+`localhost:3000`
+
+diretamente em seu navegador.
